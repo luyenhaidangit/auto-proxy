@@ -44,14 +44,15 @@ namespace AutoProxy.Shared.Logging
             // Add Elasticsearch sink if elasticUri is configured
             if (!string.IsNullOrWhiteSpace(elasticUri))
             {
-                loggerConfig.WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticUri))
-                {
-                    IndexFormat = $"flex-{applicationName}-{environmentName}-{DateTime.UtcNow:yyyy-MM}",
-                    AutoRegisterTemplate = true,
-                    NumberOfReplicas = 1,
-                    NumberOfShards = 2,
-                    ModifyConnectionSettings = c => c.BasicAuthentication(username, password),
-                });
+                // Not using Elasticsearch sink in this example, but you can uncomment the following lines to enable it
+                //loggerConfig.WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticUri))
+                //{
+                //    IndexFormat = $"flex-{applicationName}-{environmentName}-{DateTime.UtcNow:yyyy-MM}",
+                //    AutoRegisterTemplate = true,
+                //    NumberOfReplicas = 1,
+                //    NumberOfShards = 2,
+                //    ModifyConnectionSettings = c => c.BasicAuthentication(username, password),
+                //});
             }
 
             // Create logger
