@@ -1,3 +1,6 @@
+using AutoProxy.Api.Persistence;
+using AutoProxy.Shared.EntityFrameworkCore.Oracle;
+
 namespace AutoProxy.Api.Extensions
 {
     public static class ServiceExtensions
@@ -16,6 +19,15 @@ namespace AutoProxy.Api.Extensions
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
 
+            // Database context configuration
+            services.AddInfrastructureServices();
+            services.ConfigureServiceDbContext<AutoProxyDbContext>(configuration, useWallet: true);
+
+            return services;
+        }
+
+        private static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
+        {
             return services;
         }
     }
