@@ -15,8 +15,4 @@
     <ProjectReference Include="..\AutoProxy.Shared\AutoProxy.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Entities\" />
-  </ItemGroup>
-
 </Project>
