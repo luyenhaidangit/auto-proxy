@@ -16,6 +16,7 @@ namespace AutoProxy.Api.Persistence
         public DbSet<RotationSchedule> RotationSchedules { get; set; } = null!;
         public DbSet<IpWhiteList> IpWhiteLists { get; set; } = null!;
         public DbSet<Config> Configs { get; set; } = null!;
+        public DbSet<AuditLog> AuditLogs { get; set; } = null!;
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
