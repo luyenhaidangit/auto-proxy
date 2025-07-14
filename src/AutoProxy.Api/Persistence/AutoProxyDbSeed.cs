@@ -1,10 +1,12 @@
-﻿namespace AutoProxy.Api.Persistence
+﻿using AutoProxy.Api.Persistence.Seeds;
+
+namespace AutoProxy.Api.Persistence
 {
     public class AutoProxyDbSeed
     {
-        public static async Task InitAsync(SecuritiesDbContext securitiesContext, ILogger logger)
+        public static async Task InitAsync(AutoProxyDbContext securitiesContext, ILogger logger)
         {
-            await SecuritiesSeed.InitAsync(securitiesContext, logger);
+            await ConfigSeed.InitAsync(securitiesContext, logger);
         }
     }
 }
