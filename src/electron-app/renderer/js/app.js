@@ -148,13 +148,8 @@ class App {
     }
 
     async loadInitialData() {
-        // Load proxy list
-        await this.proxyManager.loadProxies();
-
-        // Load request data if on request page
-        if (this.currentPage === 'request') {
-            await this.proxyManager.loadRequests();
-        }
+        // Không load dữ liệu mặc định - chỉ load từ keys thực tế
+        console.log('App initialized - waiting for user to add keys');
     }
 
     async saveSettings() {
@@ -210,7 +205,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Handle window focus/blur for better UX
 window.addEventListener('focus', () => {
-    if (window.app && window.app.proxyManager) {
-        window.app.proxyManager.refreshData();
-    }
+    // Không tự động refresh data
+    console.log('Window focused');
 }); 
