@@ -79,14 +79,6 @@ class ProxyManager {
                 this.closeAddKeyModal();
             });
         }
-
-        // Proxy type options
-        const proxyTypeButtons = document.querySelectorAll('[data-proxy-type]');
-        proxyTypeButtons.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                this.toggleProxyType(e.target);
-            });
-        });
     }
 
     showAddKeyModal() {
@@ -103,16 +95,6 @@ class ProxyManager {
             const regionSelect = document.getElementById('regionSelect');
             if (regionSelect) {
                 regionSelect.value = 'random';
-            }
-
-            // Set default proxy type
-            const httpsBtn = document.querySelector('[data-proxy-type="https"]');
-            if (httpsBtn) {
-                httpsBtn.classList.add('active');
-            }
-            const socks5Btn = document.querySelector('[data-proxy-type="socks5"]');
-            if (socks5Btn) {
-                socks5Btn.classList.remove('active');
             }
         }
     }
@@ -150,7 +132,6 @@ class ProxyManager {
     addKeysFromModal() {
         const keyList = document.getElementById('keyList');
         const regionSelect = document.getElementById('regionSelect');
-        const activeProxyType = document.querySelector('[data-proxy-type].active');
 
         if (!keyList || !keyList.value.trim()) {
             window.app.showNotification('Vui lòng nhập danh sách keys', 'warning');
@@ -159,15 +140,14 @@ class ProxyManager {
 
         const keys = keyList.value.trim().split('\n').filter(key => key.trim());
         const region = regionSelect ? regionSelect.value : 'random';
-        const proxyType = activeProxyType ? activeProxyType.dataset.proxyType : 'https';
 
         // Add new proxies
         keys.forEach((key, index) => {
             const newProxy = {
                 id: Date.now() + index,
                 key: key.trim(),
-                proxy: `${proxyType.toUpperCase()}: 192.168.1.${100 + index}:8080`,
-                localProxy: `${proxyType.toUpperCase()}: 127.0.0.1:8080`,
+                proxy: `HTTP(S): 192.168.1.${100 + index}:8080`,
+                localProxy: `HTTP(S): 127.0.0.1:8080`,
                 ipv4: `192.168.1.${100 + index}`,
                 ipv6: `2001:db8::${index + 1}`,
                 status: 'active',
@@ -175,7 +155,7 @@ class ProxyManager {
                 timer: '00:30:00',
                 selected: false,
                 region: region,
-                proxyType: proxyType
+                proxyType: 'https'
             };
 
             this.proxies.push(newProxy);
@@ -195,16 +175,6 @@ class ProxyManager {
 
         const regionLocations = locations[region] || locations.random;
         return regionLocations[Math.floor(Math.random() * regionLocations.length)];
-    }
-
-    toggleProxyType(button) {
-        // Remove active class from all proxy type buttons
-        document.querySelectorAll('[data-proxy-type]').forEach(btn => {
-            btn.classList.remove('active');
-        });
-
-        // Add active class to clicked button
-        button.classList.add('active');
     }
 
     async loadProxies() {
