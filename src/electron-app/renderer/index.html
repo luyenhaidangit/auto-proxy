@@ -8,12 +8,14 @@
     <link rel="stylesheet" href="styles/components.css">
     <link rel="stylesheet" href="styles/themes.css">
     <link rel="stylesheet" href="styles/responsive.css">
+    <link rel="stylesheet" href="styles/enhanced-responsive.css">
+    <link rel="stylesheet" href="styles/long-content.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="dark-theme">
+<body class="dark-theme enhanced-responsive">
     <div id="app">
         <!-- Sidebar -->
-        <aside class="sidebar">
+        <aside class="sidebar nav-responsive">
             <div class="sidebar-header">
                 <div class="logo">
                     <i class="fas fa-shield-alt"></i>
@@ -47,9 +49,9 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="main-content">
+        <main class="main-content layout-responsive">
             <!-- Header -->
-            <header class="header">
+            <header class="header header-responsive">
                 <div class="header-left">
                     <h1 id="page-title">Danh sách Proxy</h1>
                 </div>
@@ -69,33 +71,33 @@
             <div class="content-area">
                 <!-- Proxy List Page -->
                 <div id="proxy-list-page" class="page active">
-                    <div class="page-header">
-                        <div class="search-box">
+                    <div class="page-header page-header-responsive">
+                        <div class="search-box search-responsive">
                             <i class="fas fa-search"></i>
                             <input type="text" placeholder="Tìm kiếm..." id="searchInput">
                         </div>
                         
                         <div class="action-buttons">
-                            <button class="btn btn-primary" id="checkAllBtn">
+                            <button class="btn btn-primary btn-responsive" id="checkAllBtn">
                                 <i class="fas fa-check"></i>
                                 Check tất cả
                             </button>
-                            <button class="btn btn-primary" id="exportAllBtn">
+                            <button class="btn btn-primary btn-responsive" id="exportAllBtn">
                                 <i class="fas fa-download"></i>
                                 Xuất tất cả
                             </button>
-                            <button class="btn btn-primary" id="rotateAllBtn">
+                            <button class="btn btn-primary btn-responsive" id="rotateAllBtn">
                                 <i class="fas fa-sync"></i>
                                 Xoay tất cả
                             </button>
-                            <button class="btn btn-success" id="addProxyBtn">
+                            <button class="btn btn-success btn-responsive" id="addProxyBtn">
                                 <i class="fas fa-plus"></i>
                                 Thêm
                             </button>
                         </div>
                     </div>
 
-                    <div class="proxy-table-container">
+                    <div class="proxy-table-container table-responsive">
                         <table class="proxy-table">
                             <thead>
                                 <tr>
@@ -137,7 +139,7 @@
                             <input type="text" placeholder="Tìm kiếm..." id="requestSearchInput">
                         </div>
                     </div>
-                    <div class="request-table-container">
+                    <div class="request-table-container table-responsive">
                         <table class="request-table">
                             <thead>
                                 <tr>
@@ -191,7 +193,7 @@
 
     <!-- Modals -->
     <!-- Export Modal -->
-    <div id="exportModal" class="modal">
+    <div id="exportModal" class="modal modal-responsive">
         <div class="modal-content">
             <div class="modal-header">
                 <h3>Xuất key</h3>
@@ -242,7 +244,7 @@
     </div>
 
     <!-- Add New Key Modal -->
-    <div id="addKeyModal" class="modal">
+    <div id="addKeyModal" class="modal modal-responsive">
         <div class="modal-content add-key-modal">
             <div class="modal-header">
                 <h3>Thêm key mới</h3>

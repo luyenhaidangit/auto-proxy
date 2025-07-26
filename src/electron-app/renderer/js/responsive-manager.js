@@ -1,261 +1,454 @@
-// Responsive Manager - Handles responsive behavior and mobile interactions
+/**
+ * Enhanced Responsive Manager for VN Proxy Manager
+ * Handles responsive behavior, touch interactions, and UX improvements
+ */
+
 class ResponsiveManager {
     constructor() {
-        this.currentBreakpoint = this.getCurrentBreakpoint();
-        this.isMobile = this.currentBreakpoint === 'mobile' || this.currentBreakpoint === 'tablet';
-        this.setupEventListeners();
+        this.currentBreakpoint = this.getBreakpoint();
+        this.isMobile = this.currentBreakpoint === 'mobile';
+        this.isTablet = this.currentBreakpoint === 'tablet';
+        this.isDesktop = this.currentBreakpoint === 'desktop';
+
         this.init();
     }
 
-    getCurrentBreakpoint() {
-        const width = window.innerWidth;
-        if (width >= 1400) return 'large-desktop';
-        if (width >= 1200) return 'desktop';
-        if (width >= 768) return 'tablet';
-        return 'mobile';
+    init() {
+        this.setupEventListeners();
+        this.applyResponsiveClasses();
+        this.setupTouchInteractions();
+        this.setupKeyboardNavigation();
+        this.setupAccessibility();
+        this.setupPerformanceOptimizations();
     }
 
     setupEventListeners() {
-        // Handle window resize
+        // Window resize handling
+        let resizeTimeout;
         window.addEventListener('resize', () => {
-            this.handleResize();
-        });
-
-        // Handle orientation change
-        window.addEventListener('orientationchange', () => {
-            setTimeout(() => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
                 this.handleResize();
-            }, 100);
+            }, 250);
         });
 
-        // Handle mobile-specific interactions
-        if (this.isMobile) {
-            this.setupMobileInteractions();
+        // Touch interactions
+        this.setupTouchEvents();
+
+        // Keyboard navigation
+        this.setupKeyboardEvents();
+
+        // Focus management
+        this.setupFocusManagement();
+
+        // Performance monitoring
+        this.setupPerformanceMonitoring();
+    }
+
+    setupTouchEvents() {
+        // Add touch-friendly interactions
+        const touchElements = document.querySelectorAll('.btn, .nav-item, .option-btn');
+
+        touchElements.forEach(element => {
+            element.addEventListener('touchstart', (e) => {
+                element.classList.add('touch-active');
+            });
+
+            element.addEventListener('touchend', (e) => {
+                setTimeout(() => {
+                    element.classList.remove('touch-active');
+                }, 150);
+            });
+        });
+
+        // Improve table scrolling on touch devices
+        const tables = document.querySelectorAll('.table-responsive');
+        tables.forEach(table => {
+            let isScrolling = false;
+            let startX, startY, scrollLeft, scrollTop;
+
+            table.addEventListener('touchstart', (e) => {
+                isScrolling = true;
+                startX = e.touches[0].pageX - table.offsetLeft;
+                startY = e.touches[0].pageY - table.offsetTop;
+                scrollLeft = table.scrollLeft;
+                scrollTop = table.scrollTop;
+            });
+
+            table.addEventListener('touchmove', (e) => {
+                if (!isScrolling) return;
+                e.preventDefault();
+                const x = e.touches[0].pageX - table.offsetLeft;
+                const y = e.touches[0].pageY - table.offsetTop;
+                const walkX = (x - startX) * 2;
+                const walkY = (y - startY) * 2;
+                table.scrollLeft = scrollLeft - walkX;
+                table.scrollTop = scrollTop - walkY;
+            });
+
+            table.addEventListener('touchend', () => {
+                isScrolling = false;
+            });
+        });
+    }
+
+    setupKeyboardEvents() {
+        // Keyboard navigation for navigation items
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach((item, index) => {
+            item.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    item.click();
+                } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    const nextItem = navItems[index + 1] || navItems[0];
+                    nextItem.focus();
+                } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    const prevItem = navItems[index - 1] || navItems[navItems.length - 1];
+                    prevItem.focus();
+                }
+            });
+        });
+
+        // Keyboard navigation for buttons
+        const buttons = document.querySelectorAll('.btn');
+        buttons.forEach(button => {
+            button.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    button.click();
+                }
+            });
+        });
+
+        // Escape key for modals
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const activeModal = document.querySelector('.modal.active');
+                if (activeModal) {
+                    const closeBtn = activeModal.querySelector('.close-btn');
+                    if (closeBtn) {
+                        closeBtn.click();
+                    }
+                }
+            }
+        });
+    }
+
+    setupFocusManagement() {
+        // Focus trap for modals
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+            const focusableElements = modal.querySelectorAll(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            const firstElement = focusableElements[0];
+            const lastElement = focusableElements[focusableElements.length - 1];
+
+            modal.addEventListener('keydown', (e) => {
+                if (e.key === 'Tab') {
+                    if (e.shiftKey) {
+                        if (document.activeElement === firstElement) {
+                            e.preventDefault();
+                            lastElement.focus();
+                        }
+                    } else {
+                        if (document.activeElement === lastElement) {
+                            e.preventDefault();
+                            firstElement.focus();
+                        }
+                    }
+                }
+            });
+        });
+
+        // Skip link functionality
+        const skipLink = document.createElement('a');
+        skipLink.href = '#main-content';
+        skipLink.textContent = 'Skip to main content';
+        skipLink.className = 'skip-link sr-only';
+        document.body.insertBefore(skipLink, document.body.firstChild);
+    }
+
+    setupAccessibility() {
+        // Add ARIA labels and roles
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach((item, index) => {
+            item.setAttribute('role', 'tab');
+            item.setAttribute('aria-selected', item.classList.contains('active'));
+            item.setAttribute('tabindex', item.classList.contains('active') ? '0' : '-1');
+        });
+
+        // Add screen reader support for status badges
+        const statusBadges = document.querySelectorAll('.status-badge');
+        statusBadges.forEach(badge => {
+            const status = badge.textContent.trim();
+            badge.setAttribute('aria-label', `Status: ${status}`);
+        });
+
+        // Add loading states
+        const buttons = document.querySelectorAll('.btn');
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                if (!button.disabled) {
+                    button.classList.add('loading');
+                    setTimeout(() => {
+                        button.classList.remove('loading');
+                    }, 1000);
+                }
+            });
+        });
+    }
+
+    setupPerformanceOptimizations() {
+        // Debounce scroll events
+        let scrollTimeout;
+        const tables = document.querySelectorAll('.table-responsive');
+        tables.forEach(table => {
+            table.addEventListener('scroll', () => {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    this.handleTableScroll(table);
+                }, 16);
+            });
+        });
+
+        // Intersection Observer for lazy loading
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            });
+
+            const lazyElements = document.querySelectorAll('.lazy-load');
+            lazyElements.forEach(el => observer.observe(el));
         }
+
+        // Optimize animations for reduced motion preference
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            document.body.classList.add('reduced-motion');
+        }
+    }
+
+    setupPerformanceMonitoring() {
+        // Monitor frame rate
+        let frameCount = 0;
+        let lastTime = performance.now();
+
+        const measurePerformance = (currentTime) => {
+            frameCount++;
+
+            if (currentTime - lastTime >= 1000) {
+                const fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
+
+                if (fps < 30) {
+                    this.optimizePerformance();
+                }
+
+                frameCount = 0;
+                lastTime = currentTime;
+            }
+
+            requestAnimationFrame(measurePerformance);
+        };
+
+        requestAnimationFrame(measurePerformance);
+    }
+
+    optimizePerformance() {
+        // Reduce animations and effects when performance is poor
+        document.body.classList.add('performance-mode');
+
+        // Simplify table rendering
+        const tables = document.querySelectorAll('.proxy-table, .request-table');
+        tables.forEach(table => {
+            table.style.willChange = 'auto';
+        });
     }
 
     handleResize() {
-        const newBreakpoint = this.getCurrentBreakpoint();
+        const newBreakpoint = this.getBreakpoint();
+
         if (newBreakpoint !== this.currentBreakpoint) {
             this.currentBreakpoint = newBreakpoint;
-            this.isMobile = this.currentBreakpoint === 'mobile' || this.currentBreakpoint === 'tablet';
-            this.onBreakpointChange();
+            this.isMobile = newBreakpoint === 'mobile';
+            this.isTablet = newBreakpoint === 'tablet';
+            this.isDesktop = newBreakpoint === 'desktop';
+
+            this.applyResponsiveClasses();
+            this.handleBreakpointChange();
         }
     }
 
-    onBreakpointChange() {
-        // Update mobile interactions
-        if (this.isMobile) {
-            this.setupMobileInteractions();
-        } else {
-            this.removeMobileInteractions();
-        }
+    getBreakpoint() {
+        const width = window.innerWidth;
 
-        // Adjust table scrolling
-        this.adjustTableScrolling();
+        if (width < 768) {
+            return 'mobile';
+        } else if (width < 1200) {
+            return 'tablet';
+        } else {
+            return 'desktop';
+        }
+    }
+
+    applyResponsiveClasses() {
+        const body = document.body;
+
+        // Remove existing breakpoint classes
+        body.classList.remove('breakpoint-mobile', 'breakpoint-tablet', 'breakpoint-desktop');
+
+        // Add current breakpoint class
+        body.classList.add(`breakpoint-${this.currentBreakpoint}`);
+
+        // Add device-specific classes
+        if (this.isMobile) {
+            body.classList.add('mobile-view', 'touch-friendly');
+        } else if (this.isTablet) {
+            body.classList.add('tablet-view', 'touch-friendly');
+        } else {
+            body.classList.add('desktop-view', 'hover-friendly');
+        }
+    }
+
+    handleBreakpointChange() {
+        // Adjust table columns visibility
+        this.adjustTableColumns();
+
+        // Update navigation behavior
+        this.updateNavigationBehavior();
 
         // Adjust modal positioning
         this.adjustModalPositioning();
 
-        // Notify other components
-        this.notifyBreakpointChange();
+        // Update touch interactions
+        this.updateTouchInteractions();
     }
 
-    setupMobileInteractions() {
-        // Add touch-friendly interactions
-        this.addTouchSupport();
+    adjustTableColumns() {
+        const tables = document.querySelectorAll('.proxy-table, .request-table');
 
-        // Add swipe gestures for navigation
-        this.addSwipeGestures();
+        tables.forEach(table => {
+            const headers = table.querySelectorAll('th');
+            const rows = table.querySelectorAll('tbody tr');
 
-        // Optimize table interactions
-        this.optimizeTableForMobile();
-    }
-
-    removeMobileInteractions() {
-        // Remove touch-specific event listeners
-        this.removeTouchSupport();
-        this.removeSwipeGestures();
-    }
-
-    addTouchSupport() {
-        // Make buttons more touch-friendly
-        const buttons = document.querySelectorAll('.btn');
-        buttons.forEach(btn => {
-            btn.style.minHeight = '44px';
-            btn.style.minWidth = '44px';
-        });
-
-        // Add touch feedback
-        buttons.forEach(btn => {
-            btn.addEventListener('touchstart', () => {
-                btn.style.opacity = '0.7';
-            });
-            btn.addEventListener('touchend', () => {
-                btn.style.opacity = '1';
-            });
-        });
-    }
-
-    removeTouchSupport() {
-        const buttons = document.querySelectorAll('.btn');
-        buttons.forEach(btn => {
-            btn.style.minHeight = '';
-            btn.style.minWidth = '';
-            btn.style.opacity = '';
-        });
-    }
-
-    addSwipeGestures() {
-        let startX = 0;
-        let startY = 0;
-        let isSwiping = false;
-
-        document.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-            isSwiping = false;
-        });
-
-        document.addEventListener('touchmove', (e) => {
-            if (!startX || !startY) return;
-
-            const deltaX = e.touches[0].clientX - startX;
-            const deltaY = e.touches[0].clientY - startY;
-
-            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
-                isSwiping = true;
-                e.preventDefault();
+            if (this.isMobile) {
+                // Hide less important columns on mobile
+                headers.forEach((header, index) => {
+                    if (index === 3 || index === 5) { // Local Proxy and IPv6
+                        header.style.display = 'none';
+                        rows.forEach(row => {
+                            const cell = row.cells[index];
+                            if (cell) cell.style.display = 'none';
+                        });
+                    }
+                });
+            } else {
+                // Show all columns on larger screens
+                headers.forEach((header, index) => {
+                    header.style.display = '';
+                    rows.forEach(row => {
+                        const cell = row.cells[index];
+                        if (cell) cell.style.display = '';
+                    });
+                });
             }
         });
-
-        document.addEventListener('touchend', (e) => {
-            if (!isSwiping) return;
-
-            const deltaX = e.changedTouches[0].clientX - startX;
-            const deltaY = e.changedTouches[0].clientY - startY;
-
-            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 100) {
-                this.handleSwipe(deltaX > 0 ? 'right' : 'left');
-            }
-
-            startX = 0;
-            startY = 0;
-            isSwiping = false;
-        });
     }
 
-    removeSwipeGestures() {
-        // Remove swipe event listeners if needed
-    }
+    updateNavigationBehavior() {
+        const sidebar = document.querySelector('.sidebar');
+        const navItems = document.querySelectorAll('.nav-item');
 
-    handleSwipe(direction) {
-        // Handle swipe navigation
-        if (direction === 'left' && this.currentBreakpoint === 'mobile') {
-            // Could implement navigation to next page
-        } else if (direction === 'right' && this.currentBreakpoint === 'mobile') {
-            // Could implement navigation to previous page
+        if (this.isMobile) {
+            // Mobile navigation behavior
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    // Add mobile-specific navigation logic here
+                    this.handleMobileNavigation(item);
+                });
+            });
+        } else {
+            // Desktop navigation behavior
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    // Add desktop-specific navigation logic here
+                    this.handleDesktopNavigation(item);
+                });
+            });
         }
     }
 
-    optimizeTableForMobile() {
-        const tables = document.querySelectorAll('.proxy-table, .request-table');
-        tables.forEach(table => {
-            // Add horizontal scroll indicator
-            this.addScrollIndicator(table);
+    handleMobileNavigation(item) {
+        // Mobile-specific navigation handling
+        const targetPage = item.getAttribute('data-page');
+        if (targetPage) {
+            this.switchPage(targetPage);
 
-            // Add column visibility toggle
-            this.addColumnToggle(table);
+            // Add mobile navigation feedback
+            item.classList.add('mobile-active');
+            setTimeout(() => {
+                item.classList.remove('mobile-active');
+            }, 200);
+        }
+    }
+
+    handleDesktopNavigation(item) {
+        // Desktop-specific navigation handling
+        const targetPage = item.getAttribute('data-page');
+        if (targetPage) {
+            this.switchPage(targetPage);
+        }
+    }
+
+    switchPage(pageId) {
+        // Hide all pages
+        const pages = document.querySelectorAll('.page');
+        pages.forEach(page => {
+            page.classList.remove('active');
         });
-    }
 
-    addScrollIndicator(table) {
-        const container = table.closest('.proxy-table-container, .request-table-container');
-        if (!container) return;
+        // Show target page
+        const targetPage = document.getElementById(`${pageId}-page`);
+        if (targetPage) {
+            targetPage.classList.add('active');
+        }
 
-        // Add scroll indicator
-        const indicator = document.createElement('div');
-        indicator.className = 'scroll-indicator';
-        indicator.innerHTML = '<i class="fas fa-arrows-alt-h"></i> Scroll to see more';
-        indicator.style.cssText = `
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(74, 158, 255, 0.9);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 12px;
-            z-index: 10;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s;
-        `;
-
-        container.appendChild(indicator);
-
-        // Show indicator when table is scrollable
-        const checkScroll = () => {
-            const isScrollable = container.scrollWidth > container.clientWidth;
-            indicator.style.opacity = isScrollable ? '1' : '0';
-        };
-
-        container.addEventListener('scroll', checkScroll);
-        window.addEventListener('resize', checkScroll);
-        checkScroll();
-    }
-
-    addColumnToggle(table) {
-        if (this.currentBreakpoint !== 'mobile') return;
-
-        const container = table.closest('.proxy-table-container, .request-table-container');
-        if (!container) return;
-
-        // Add column toggle button
-        const toggleBtn = document.createElement('button');
-        toggleBtn.className = 'column-toggle-btn';
-        toggleBtn.innerHTML = '<i class="fas fa-columns"></i>';
-        toggleBtn.style.cssText = `
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: rgba(74, 158, 255, 0.9);
-            color: white;
-            border: none;
-            padding: 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            z-index: 10;
-        `;
-
-        container.appendChild(toggleBtn);
-
-        toggleBtn.addEventListener('click', () => {
-            this.toggleColumnVisibility(table);
-        });
-    }
-
-    toggleColumnVisibility(table) {
-        const hiddenColumns = table.querySelectorAll('th:nth-child(4), td:nth-child(4), th:nth-child(6), td:nth-child(6)');
-        hiddenColumns.forEach(cell => {
-            cell.style.display = cell.style.display === 'none' ? 'table-cell' : 'none';
-        });
-    }
-
-    adjustTableScrolling() {
-        const containers = document.querySelectorAll('.proxy-table-container, .request-table-container');
-        containers.forEach(container => {
-            if (this.isMobile) {
-                container.style.overflowX = 'auto';
-                container.style.webkitOverflowScrolling = 'touch';
-            } else {
-                container.style.overflowX = 'hidden';
+        // Update navigation active state
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.classList.remove('active');
+            if (item.getAttribute('data-page') === pageId) {
+                item.classList.add('active');
             }
         });
+
+        // Update page title
+        this.updatePageTitle(pageId);
+    }
+
+    updatePageTitle(pageId) {
+        const titleMap = {
+            'proxy-list': 'Danh sách Proxy',
+            'checker': 'Proxy Checker',
+            'request': 'Proxy Request',
+            'settings': 'Cài đặt'
+        };
+
+        const pageTitle = document.getElementById('page-title');
+        if (pageTitle && titleMap[pageId]) {
+            pageTitle.textContent = titleMap[pageId];
+        }
     }
 
     adjustModalPositioning() {
         const modals = document.querySelectorAll('.modal');
+
         modals.forEach(modal => {
             if (this.isMobile) {
                 modal.style.alignItems = 'flex-start';
@@ -267,52 +460,169 @@ class ResponsiveManager {
         });
     }
 
-    notifyBreakpointChange() {
-        // Dispatch custom event for other components
-        const event = new CustomEvent('breakpointChange', {
-            detail: {
-                breakpoint: this.currentBreakpoint,
-                isMobile: this.isMobile
+    updateTouchInteractions() {
+        const touchElements = document.querySelectorAll('.btn, .nav-item, .option-btn');
+
+        touchElements.forEach(element => {
+            if (this.isMobile) {
+                element.style.minHeight = '44px';
+                element.style.minWidth = '44px';
+            } else {
+                element.style.minHeight = '';
+                element.style.minWidth = '';
             }
         });
-        document.dispatchEvent(event);
+    }
+
+    handleTableScroll(table) {
+        // Add scroll indicators
+        const scrollLeft = table.scrollLeft;
+        const scrollWidth = table.scrollWidth;
+        const clientWidth = table.clientWidth;
+
+        if (scrollLeft > 0) {
+            table.classList.add('scrolled-left');
+        } else {
+            table.classList.remove('scrolled-left');
+        }
+
+        if (scrollLeft + clientWidth < scrollWidth) {
+            table.classList.add('scrolled-right');
+        } else {
+            table.classList.remove('scrolled-right');
+        }
     }
 
     // Utility methods
-    isTablet() {
-        return this.currentBreakpoint === 'tablet';
-    }
-
-    isMobile() {
-        return this.currentBreakpoint === 'mobile';
-    }
-
-    isDesktop() {
-        return this.currentBreakpoint === 'desktop' || this.currentBreakpoint === 'large-desktop';
-    }
-
-    getScreenSize() {
-        return {
-            width: window.innerWidth,
-            height: window.innerHeight,
-            breakpoint: this.currentBreakpoint
+    debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
         };
     }
 
-    // Initialize responsive manager
-    init() {
-        this.adjustTableScrolling();
-        this.adjustModalPositioning();
+    throttle(func, limit) {
+        let inThrottle;
+        return function () {
+            const args = arguments;
+            const context = this;
+            if (!inThrottle) {
+                func.apply(context, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
+        };
+    }
 
-        // Add responsive classes to body
-        document.body.classList.add(`breakpoint-${this.currentBreakpoint}`);
-        if (this.isMobile) {
-            document.body.classList.add('mobile-view');
+    // Public API methods
+    getCurrentBreakpoint() {
+        return this.currentBreakpoint;
+    }
+
+    isMobileDevice() {
+        return this.isMobile;
+    }
+
+    isTabletDevice() {
+        return this.isTablet;
+    }
+
+    isDesktopDevice() {
+        return this.isDesktop;
+    }
+
+    // Method to handle long content
+    handleLongContent() {
+        const tables = document.querySelectorAll('.proxy-table, .request-table');
+
+        tables.forEach(table => {
+            const cells = table.querySelectorAll('td');
+
+            cells.forEach(cell => {
+                const text = cell.textContent;
+                if (text.length > 50) {
+                    // Add tooltip for long content
+                    cell.setAttribute('title', text);
+                    cell.classList.add('text-truncate');
+
+                    // Add expand/collapse functionality for mobile
+                    if (this.isMobile) {
+                        cell.addEventListener('click', () => {
+                            this.toggleCellExpansion(cell);
+                        });
+                    }
+                }
+            });
+        });
+    }
+
+    toggleCellExpansion(cell) {
+        if (cell.classList.contains('expanded')) {
+            cell.classList.remove('expanded');
+            cell.classList.add('text-truncate');
+        } else {
+            cell.classList.remove('text-truncate');
+            cell.classList.add('expanded');
         }
+    }
+
+    // Method to optimize table rendering for long content
+    optimizeTableRendering() {
+        const tables = document.querySelectorAll('.proxy-table, .request-table');
+
+        tables.forEach(table => {
+            const tbody = table.querySelector('tbody');
+            if (tbody && tbody.children.length > 100) {
+                // Implement virtual scrolling for large datasets
+                this.implementVirtualScrolling(tbody);
+            }
+        });
+    }
+
+    implementVirtualScrolling(tbody) {
+        const rowHeight = 50; // Approximate row height
+        const visibleRows = Math.ceil(window.innerHeight / rowHeight);
+        const totalRows = tbody.children.length;
+
+        let startIndex = 0;
+        let endIndex = Math.min(visibleRows, totalRows);
+
+        const updateVisibleRows = () => {
+            const scrollTop = tbody.parentElement.scrollTop;
+            startIndex = Math.floor(scrollTop / rowHeight);
+            endIndex = Math.min(startIndex + visibleRows, totalRows);
+
+            // Update visible rows
+            Array.from(tbody.children).forEach((row, index) => {
+                if (index >= startIndex && index < endIndex) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        };
+
+        tbody.parentElement.addEventListener('scroll', this.throttle(updateVisibleRows, 16));
     }
 }
 
-// Initialize responsive manager when DOM is ready
+// Initialize responsive manager when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     window.responsiveManager = new ResponsiveManager();
-}); 
+
+    // Handle long content after initialization
+    setTimeout(() => {
+        window.responsiveManager.handleLongContent();
+        window.responsiveManager.optimizeTableRendering();
+    }, 1000);
+});
+
+// Export for use in other modules
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = ResponsiveManager;
+} 

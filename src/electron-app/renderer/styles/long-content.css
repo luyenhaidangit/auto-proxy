@@ -1,0 +1,608 @@
+/* Long Content Handling Styles */
+
+/* Text truncation for long content */
+.text-truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+    position: relative;
+}
+
+.text-truncate:hover {
+    overflow: visible;
+    white-space: normal;
+    word-wrap: break-word;
+    background: var(--dark-secondary);
+    border: 1px solid var(--dark-border);
+    border-radius: var(--border-radius-sm);
+    padding: var(--spacing-sm);
+    position: absolute;
+    z-index: 1000;
+    min-width: 200px;
+    max-width: 300px;
+    box-shadow: 0 4px 12px var(--shadow-heavy);
+}
+
+/* Cell expansion for mobile */
+.cell-expandable {
+    cursor: pointer;
+    position: relative;
+}
+
+.cell-expandable.expanded {
+    white-space: normal;
+    word-wrap: break-word;
+    min-height: 60px;
+    background: var(--dark-border);
+    border-radius: var(--border-radius-sm);
+    padding: var(--spacing-sm);
+    margin: var(--spacing-xs);
+}
+
+.cell-expandable::after {
+    content: '...';
+    position: absolute;
+    right: var(--spacing-xs);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+.cell-expandable.expanded::after {
+    display: none;
+}
+
+/* Table cell content handling */
+.proxy-table td,
+.request-table td {
+    position: relative;
+    max-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.proxy-table td:hover,
+.request-table td:hover {
+    overflow: visible;
+    white-space: normal;
+    word-wrap: break-word;
+    background: var(--dark-secondary);
+    border-radius: var(--border-radius-sm);
+    z-index: 10;
+    position: relative;
+}
+
+/* Long URL handling */
+.url-cell {
+    max-width: 150px;
+    position: relative;
+}
+
+.url-cell .url-text {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.url-cell .url-full {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--dark-secondary);
+    border: 1px solid var(--dark-border);
+    border-radius: var(--border-radius-sm);
+    padding: var(--spacing-sm);
+    z-index: 1000;
+    max-width: 300px;
+    word-wrap: break-word;
+    white-space: normal;
+    box-shadow: 0 4px 12px var(--shadow-heavy);
+}
+
+.url-cell:hover .url-full {
+    display: block;
+}
+
+/* Long key handling */
+.key-cell {
+    max-width: 120px;
+    position: relative;
+}
+
+.key-cell .key-preview {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.key-cell .key-full {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--dark-secondary);
+    border: 1px solid var(--dark-border);
+    border-radius: var(--border-radius-sm);
+    padding: var(--spacing-sm);
+    z-index: 1000;
+    max-width: 250px;
+    word-wrap: break-word;
+    white-space: normal;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 11px;
+    box-shadow: 0 4px 12px var(--shadow-heavy);
+}
+
+.key-cell:hover .key-full {
+    display: block;
+}
+
+/* IP address handling */
+.ip-cell {
+    max-width: 100px;
+    position: relative;
+}
+
+.ip-cell .ip-preview {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 11px;
+}
+
+.ip-cell .ip-full {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--dark-secondary);
+    border: 1px solid var(--dark-border);
+    border-radius: var(--border-radius-sm);
+    padding: var(--spacing-sm);
+    z-index: 1000;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 11px;
+    box-shadow: 0 4px 12px var(--shadow-heavy);
+}
+
+.ip-cell:hover .ip-full {
+    display: block;
+}
+
+/* Status badge with long text */
+.status-badge.long-text {
+    max-width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: relative;
+}
+
+.status-badge.long-text:hover {
+    overflow: visible;
+    white-space: normal;
+    word-wrap: break-word;
+    max-width: 150px;
+    z-index: 1000;
+}
+
+/* Action buttons in table */
+.action-cell {
+    min-width: 120px;
+    white-space: nowrap;
+}
+
+.action-cell .btn {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 11px;
+    margin: 2px;
+}
+
+/* Responsive table with long content */
+.table-responsive-long {
+    overflow-x: auto;
+    position: relative;
+}
+
+.table-responsive-long::before,
+.table-responsive-long::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 20px;
+    pointer-events: none;
+    z-index: 5;
+    transition: opacity 0.3s ease;
+}
+
+.table-responsive-long::before {
+    left: 0;
+    background: linear-gradient(90deg, var(--dark-bg) 0%, transparent 100%);
+    opacity: 0;
+}
+
+.table-responsive-long::after {
+    right: 0;
+    background: linear-gradient(90deg, transparent 0%, var(--dark-bg) 100%);
+    opacity: 0;
+}
+
+.table-responsive-long.scrolled-left::before {
+    opacity: 1;
+}
+
+.table-responsive-long.scrolled-right::after {
+    opacity: 1;
+}
+
+/* Scroll indicators */
+.scroll-indicator {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--primary-color);
+    color: var(--text-primary);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    font-size: 11px;
+    z-index: 10;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.scroll-indicator.left {
+    left: var(--spacing-sm);
+}
+
+.scroll-indicator.right {
+    right: var(--spacing-sm);
+}
+
+.table-responsive-long.scrolled-left .scroll-indicator.left {
+    opacity: 1;
+}
+
+.table-responsive-long.scrolled-right .scroll-indicator.right {
+    opacity: 1;
+}
+
+/* Mobile-specific long content handling */
+@media (max-width: 767px) {
+    .text-truncate {
+        max-width: 100px;
+    }
+    
+    .text-truncate:hover {
+        max-width: 200px;
+    }
+    
+    .url-cell {
+        max-width: 80px;
+    }
+    
+    .key-cell {
+        max-width: 80px;
+    }
+    
+    .ip-cell {
+        max-width: 60px;
+    }
+    
+    .status-badge.long-text {
+        max-width: 60px;
+    }
+    
+    .status-badge.long-text:hover {
+        max-width: 120px;
+    }
+    
+    .action-cell {
+        min-width: 100px;
+    }
+    
+    .action-cell .btn {
+        padding: var(--spacing-xs);
+        font-size: 10px;
+        margin: 1px;
+    }
+    
+    /* Mobile cell expansion */
+    .cell-expandable {
+        position: relative;
+    }
+    
+    .cell-expandable::before {
+        content: 'Tap to expand';
+        position: absolute;
+        right: var(--spacing-xs);
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 10px;
+        color: var(--text-muted);
+        opacity: 0.7;
+    }
+    
+    .cell-expandable.expanded::before {
+        display: none;
+    }
+}
+
+/* Extra small mobile */
+@media (max-width: 479px) {
+    .text-truncate {
+        max-width: 60px;
+    }
+    
+    .text-truncate:hover {
+        max-width: 150px;
+    }
+    
+    .url-cell {
+        max-width: 50px;
+    }
+    
+    .key-cell {
+        max-width: 50px;
+    }
+    
+    .ip-cell {
+        max-width: 40px;
+    }
+    
+    .status-badge.long-text {
+        max-width: 40px;
+    }
+    
+    .status-badge.long-text:hover {
+        max-width: 80px;
+    }
+    
+    .action-cell {
+        min-width: 80px;
+    }
+    
+    .action-cell .btn {
+        padding: 4px 6px;
+        font-size: 9px;
+        margin: 1px;
+    }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+    .text-truncate:hover,
+    .url-cell:hover .url-full,
+    .key-cell:hover .key-full,
+    .ip-cell:hover .ip-full,
+    .status-badge.long-text:hover {
+        display: none;
+    }
+    
+    .cell-expandable {
+        cursor: pointer;
+    }
+    
+    .cell-expandable:active {
+        background: var(--dark-border);
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .text-truncate:hover,
+    .url-cell .url-full,
+    .key-cell .key-full,
+    .ip-cell .ip-full,
+    .status-badge.long-text:hover {
+        border: 2px solid var(--text-primary);
+        background: var(--dark-bg);
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .text-truncate,
+    .url-cell,
+    .key-cell,
+    .ip-cell,
+    .status-badge.long-text {
+        transition: none;
+    }
+    
+    .scroll-indicator {
+        transition: none;
+    }
+}
+
+/* Print styles for long content */
+@media print {
+    .text-truncate,
+    .url-cell,
+    .key-cell,
+    .ip-cell,
+    .status-badge.long-text {
+        white-space: normal;
+        word-wrap: break-word;
+        overflow: visible;
+        max-width: none;
+    }
+    
+    .cell-expandable {
+        white-space: normal;
+        word-wrap: break-word;
+    }
+    
+    .scroll-indicator {
+        display: none;
+    }
+}
+
+/* Loading states for long content */
+.content-loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.content-loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: contentLoading 1.5s infinite;
+}
+
+@keyframes contentLoading {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+/* Virtual scrolling styles */
+.virtual-scroll-container {
+    position: relative;
+    overflow-y: auto;
+    height: 400px;
+}
+
+.virtual-scroll-spacer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+}
+
+.virtual-scroll-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+/* Performance optimizations */
+.performance-mode .text-truncate:hover,
+.performance-mode .url-cell:hover .url-full,
+.performance-mode .key-cell:hover .key-full,
+.performance-mode .ip-cell:hover .ip-full,
+.performance-mode .status-badge.long-text:hover {
+    display: none;
+}
+
+.performance-mode .cell-expandable {
+    white-space: normal;
+    word-wrap: break-word;
+    max-width: none;
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: no-preference) {
+    .text-truncate:focus,
+    .cell-expandable:focus {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 2px;
+    }
+}
+
+/* Dark mode specific adjustments */
+.dark-theme .text-truncate:hover,
+.dark-theme .url-cell .url-full,
+.dark-theme .key-cell .key-full,
+.dark-theme .ip-cell .ip-full,
+.dark-theme .status-badge.long-text:hover {
+    background: var(--dark-secondary);
+    border-color: var(--dark-border);
+    color: var(--text-primary);
+}
+
+/* Light mode support (if needed) */
+.light-theme .text-truncate:hover,
+.light-theme .url-cell .url-full,
+.light-theme .key-cell .key-full,
+.light-theme .ip-cell .ip-full,
+.light-theme .status-badge.long-text:hover {
+    background: #f5f5f5;
+    border-color: #ddd;
+    color: #333;
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .text-truncate,
+    .url-cell,
+    .key-cell,
+    .ip-cell,
+    .status-badge.long-text {
+        font-weight: 500;
+    }
+}
+
+/* Landscape mobile adjustments */
+@media (max-width: 767px) and (orientation: landscape) {
+    .text-truncate {
+        max-width: 120px;
+    }
+    
+    .url-cell {
+        max-width: 100px;
+    }
+    
+    .key-cell {
+        max-width: 100px;
+    }
+    
+    .ip-cell {
+        max-width: 80px;
+    }
+    
+    .status-badge.long-text {
+        max-width: 80px;
+    }
+}
+
+/* Container queries support (future) */
+@container (max-width: 400px) {
+    .container-query-friendly .text-truncate {
+        max-width: 80px;
+    }
+    
+    .container-query-friendly .url-cell {
+        max-width: 60px;
+    }
+    
+    .container-query-friendly .key-cell {
+        max-width: 60px;
+    }
+    
+    .container-query-friendly .ip-cell {
+        max-width: 50px;
+    }
+}
+
+@container (min-width: 401px) {
+    .container-query-friendly .text-truncate {
+        max-width: 200px;
+    }
+    
+    .container-query-friendly .url-cell {
+        max-width: 150px;
+    }
+    
+    .container-query-friendly .key-cell {
+        max-width: 120px;
+    }
+    
+    .container-query-friendly .ip-cell {
+        max-width: 100px;
+    }
+} 
