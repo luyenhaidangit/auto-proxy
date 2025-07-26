@@ -63,13 +63,6 @@ class ProxyManager {
                 this.addKeysFromModal();
             });
         }
-
-        // Click outside modal to close
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('modal')) {
-                this.closeAddKeyModal();
-            }
-        });
     }
 
     showAddKeyModal() {
@@ -81,11 +74,6 @@ class ProxyManager {
             const keyList = document.getElementById('keyList');
             if (keyList) {
                 keyList.value = 'Đây là key demo';
-            }
-
-            const regionSelect = document.getElementById('regionSelect');
-            if (regionSelect) {
-                regionSelect.value = 'random';
             }
         }
     }
@@ -122,7 +110,6 @@ class ProxyManager {
 
     addKeysFromModal() {
         const keyList = document.getElementById('keyList');
-        const regionSelect = document.getElementById('regionSelect');
 
         if (!keyList || !keyList.value.trim()) {
             window.app.showNotification('Vui lòng nhập danh sách keys', 'warning');
@@ -130,7 +117,6 @@ class ProxyManager {
         }
 
         const keys = keyList.value.trim().split('\n').filter(key => key.trim());
-        const region = regionSelect ? regionSelect.value : 'random';
 
         // Add new proxies
         keys.forEach((key, index) => {
@@ -142,10 +128,10 @@ class ProxyManager {
                 ipv4: `192.168.1.${100 + index}`,
                 ipv6: `2001:db8::${index + 1}`,
                 status: 'active',
-                location: this.getLocationByRegion(region),
+                location: this.getLocationByRegion('random'),
                 timer: '00:30:00',
                 selected: false,
-                region: region,
+                region: 'random',
                 proxyType: 'https'
             };
 
