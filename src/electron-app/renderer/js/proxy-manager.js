@@ -5,6 +5,7 @@ class ProxyManager {
         this.requests = [];
         this.selectedProxies = new Set();
         this.setupEventListeners();
+        this.loadProxiesFromFile(); // Load proxies khi khởi tạo
     }
 
     setupEventListeners() {
@@ -108,6 +109,22 @@ class ProxyManager {
         }
     }
 
+    async saveProxiesToFile() {
+        if (window.electronAPI && window.electronAPI.invoke) {
+            await window.electronAPI.invoke('save-proxies', this.proxies);
+        }
+    }
+
+    async loadProxiesFromFile() {
+        if (window.electronAPI && window.electronAPI.invoke) {
+            const result = await window.electronAPI.invoke('load-proxies');
+            if (result.success) {
+                this.proxies = result.proxies;
+                this.renderProxies();
+            }
+        }
+    }
+
     addKeysFromModal() {
         const keyList = document.getElementById('keyList');
 
@@ -140,6 +157,7 @@ class ProxyManager {
 
         this.renderProxies();
         this.closeAddKeyModal();
+        this.saveProxiesToFile(); // Lưu proxies ra file
         window.app.showNotification(`Đã thêm ${keys.length} keys thành công`, 'success');
     }
 

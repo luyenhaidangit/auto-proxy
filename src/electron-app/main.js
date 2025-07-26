@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain, dialog, Menu, Tray, nativeImage } = require('electron');
+const fs = require('fs');
 const path = require('path');
 const Store = require('electron-store');
 
@@ -189,6 +190,31 @@ ipcMain.handle('get-app-settings', () => {
 ipcMain.handle('save-app-settings', (event, settings) => {
     store.set('settings', settings);
     return true;
+});
+
+// Lưu proxies ra file
+ipcMain.handle('save-proxies', async (event, proxies) => {
+    const filePath = path.join(app.getPath('userData'), 'keys.json');
+    try {
+        fs.writeFileSync(filePath, JSON.stringify(proxies, null, 2), 'utf-8');
+        return { success: true, filePath };
+    } catch (err) {
+        return { success: false, error: err.message };
+    }
+});
+
+// Load proxies từ file
+ipcMain.handle('load-proxies', async () => {
+    const filePath = path.join(app.getPath('userData'), 'keys.json');
+    try {
+        if (fs.existsSync(filePath)) {
+            const data = fs.readFileSync(filePath, 'utf-8');
+            return { success: true, proxies: JSON.parse(data) };
+        }
+        return { success: true, proxies: [] };
+    } catch (err) {
+        return { success: false, error: err.message };
+    }
 });
 
 ipcMain.handle('export-keys', async (event, data) => {
