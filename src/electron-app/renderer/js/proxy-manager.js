@@ -1,11 +1,12 @@
 // Proxy Manager - Handles proxy data and operations
 class ProxyManager {
     constructor() {
+        this.keys = [];
         this.proxies = [];
         this.requests = [];
         this.selectedProxies = new Set();
         this.setupEventListeners();
-        this.loadProxiesFromFile(); // Load proxies khi khởi tạo
+        this.loadKeysFromFile();
     }
 
     setupEventListeners() {
@@ -109,19 +110,120 @@ class ProxyManager {
         }
     }
 
-    async saveProxiesToFile() {
+    async saveKeysToFile() {
         if (window.electronAPI && window.electronAPI.invoke) {
-            await window.electronAPI.invoke('save-proxies', this.proxies);
+            await window.electronAPI.invoke('save-keys', this.keys);
         }
     }
 
-    async loadProxiesFromFile() {
+    async loadKeysFromFile() {
         if (window.electronAPI && window.electronAPI.invoke) {
-            const result = await window.electronAPI.invoke('load-proxies');
+            const result = await window.electronAPI.invoke('load-keys');
             if (result.success) {
-                this.proxies = result.proxies;
-                this.renderProxies();
+                this.keys = result.keys;
+                await this.loadProxiesFromKeys();
             }
+        }
+    }
+
+    async loadProxiesFromKeys() {
+        this.proxies = [];
+        for (const key of this.keys) {
+            try {
+                const proxyData = await this.fetchProxyInfo(key);
+                if (proxyData) {
+                    this.proxies.push(proxyData);
+                }
+            } catch (error) {
+                console.error(`Error fetching proxy info for key: ${key}`, error);
+                // Add proxy with error status
+                this.proxies.push({
+                    id: Date.now() + Math.random(),
+                    key: key,
+                    proxy: 'Error fetching data',
+                    localProxy: 'Error fetching data',
+                    ipv4: 'Error',
+                    ipv6: 'Error',
+                    status: 'error',
+                    location: 'Error',
+                    timer: '00:00:00',
+                    selected: false,
+                    region: 'error',
+                    proxyType: 'error'
+                });
+            }
+        }
+        this.renderProxies();
+    }
+
+    async fetchProxyInfo(key) {
+        try {
+            const response = await fetch(`https://api.vnproxy.com/webservice/statusIP?key=${key}`);
+            const data = await response.json();
+
+            if (data.code === 200 && data.data) {
+                const proxyInfo = data.data;
+                return {
+                    id: Date.now() + Math.random(),
+                    key: key,
+                    proxy: `${proxyInfo.proxyType.toUpperCase()}: ${proxyInfo.ipv4}`,
+                    localProxy: `${proxyInfo.proxyType.toUpperCase()}: 127.0.0.1:8080`,
+                    ipv4: proxyInfo.public_ipv4,
+                    ipv6: proxyInfo.public_ipv6,
+                    status: this.getProxyStatus(proxyInfo),
+                    location: proxyInfo.location,
+                    timer: this.calculateTimeRemaining(proxyInfo.proxyTimeout),
+                    selected: false,
+                    region: proxyInfo.location,
+                    proxyType: proxyInfo.proxyType,
+                    credential: proxyInfo.credential,
+                    expired: proxyInfo.expired,
+                    nextChangeIP: proxyInfo.nextChangeIP
+                };
+            } else {
+                throw new Error(data.message || 'Failed to fetch proxy info');
+            }
+        } catch (error) {
+            console.error('Error fetching proxy info:', error);
+            throw error;
+        }
+    }
+
+    getProxyStatus(proxyInfo) {
+        const now = new Date();
+        const expired = new Date(proxyInfo.expired);
+
+        if (expired < now) {
+            return 'expired';
+        }
+
+        const timeDiff = expired - now;
+        const hoursDiff = timeDiff / (1000 * 60 * 60);
+
+        if (hoursDiff < 1) {
+            return 'warning';
+        }
+
+        return 'active';
+    }
+
+    calculateTimeRemaining(timeoutStr) {
+        try {
+            const timeout = new Date(timeoutStr);
+            const now = new Date();
+            const diff = timeout - now;
+
+            if (diff <= 0) {
+                return '00:00:00';
+            }
+
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        } catch (error) {
+            return '00:00:00';
         }
     }
 
@@ -133,32 +235,19 @@ class ProxyManager {
             return;
         }
 
-        const keys = keyList.value.trim().split('\n').filter(key => key.trim());
+        const newKeys = keyList.value.trim().split('\n').filter(key => key.trim());
 
-        // Add new proxies
-        keys.forEach((key, index) => {
-            const newProxy = {
-                id: Date.now() + index,
-                key: key.trim(),
-                proxy: `HTTP(S): 192.168.1.${100 + index}:8080`,
-                localProxy: `HTTP(S): 127.0.0.1:8080`,
-                ipv4: `192.168.1.${100 + index}`,
-                ipv6: `2001:db8::${index + 1}`,
-                status: 'active',
-                location: this.getLocationByRegion('random'),
-                timer: '00:30:00',
-                selected: false,
-                region: 'random',
-                proxyType: 'https'
-            };
+        // Add new keys to the list
+        this.keys = [...this.keys, ...newKeys];
 
-            this.proxies.push(newProxy);
-        });
+        // Save keys to file
+        this.saveKeysToFile();
 
-        this.renderProxies();
+        // Load proxy info for new keys
+        this.loadProxiesFromKeys();
+
         this.closeAddKeyModal();
-        this.saveProxiesToFile(); // Lưu proxies ra file
-        window.app.showNotification(`Đã thêm ${keys.length} keys thành công`, 'success');
+        window.app.showNotification(`Đã thêm ${newKeys.length} keys thành công`, 'success');
     }
 
     getLocationByRegion(region) {
@@ -430,23 +519,7 @@ class ProxyManager {
     }
 
     async checkAllProxies() {
-        try {
-            window.app.showLoading();
-            // Simulate checking all proxies
-            await new Promise(resolve => setTimeout(resolve, 2000));
-
-            // Update status
-            this.proxies.forEach(proxy => {
-                proxy.status = Math.random() > 0.3 ? 'active' : 'expired';
-            });
-
-            this.renderProxies();
-            window.app.showNotification('Đã kiểm tra tất cả proxy', 'success');
-        } catch (error) {
-            window.app.showNotification('Lỗi khi kiểm tra proxy', 'error');
-        } finally {
-            window.app.hideLoading();
-        }
+        await this.refreshAllProxies();
     }
 
     async exportAllProxies() {
@@ -464,17 +537,7 @@ class ProxyManager {
     }
 
     async rotateAllProxies() {
-        try {
-            window.app.showLoading();
-            // Simulate rotating all proxies
-            await new Promise(resolve => setTimeout(resolve, 1500));
-
-            window.app.showNotification('Đã xoay tất cả proxy', 'success');
-        } catch (error) {
-            window.app.showNotification('Lỗi khi xoay proxy', 'error');
-        } finally {
-            window.app.hideLoading();
-        }
+        await this.refreshAllProxies();
     }
 
     async importKeys() {
@@ -494,8 +557,27 @@ class ProxyManager {
         window.app.showNotification(`Đang monitor proxy ${proxyId}`, 'info');
     }
 
-    refreshProxy(proxyId) {
-        window.app.showNotification(`Đang refresh proxy ${proxyId}`, 'info');
+    async refreshAllProxies() {
+        window.app.showNotification('Đang cập nhật thông tin proxy...', 'info');
+        await this.loadProxiesFromKeys();
+        window.app.showNotification('Đã cập nhật thông tin proxy', 'success');
+    }
+
+    async refreshProxy(proxyId) {
+        const proxy = this.proxies.find(p => p.id === proxyId);
+        if (proxy) {
+            try {
+                const newProxyData = await this.fetchProxyInfo(proxy.key);
+                if (newProxyData) {
+                    // Update existing proxy with new data
+                    Object.assign(proxy, newProxyData);
+                    this.renderProxies();
+                    window.app.showNotification('Đã cập nhật proxy', 'success');
+                }
+            } catch (error) {
+                window.app.showNotification('Lỗi khi cập nhật proxy', 'error');
+            }
+        }
     }
 
     setTimer(proxyId) {

@@ -192,26 +192,26 @@ ipcMain.handle('save-app-settings', (event, settings) => {
     return true;
 });
 
-// Lưu proxies ra file
-ipcMain.handle('save-proxies', async (event, proxies) => {
+// Lưu keys ra file
+ipcMain.handle('save-keys', async (event, keys) => {
     const filePath = path.join(app.getPath('userData'), 'keys.json');
     try {
-        fs.writeFileSync(filePath, JSON.stringify(proxies, null, 2), 'utf-8');
+        fs.writeFileSync(filePath, JSON.stringify(keys, null, 2), 'utf-8');
         return { success: true, filePath };
     } catch (err) {
         return { success: false, error: err.message };
     }
 });
 
-// Load proxies từ file
-ipcMain.handle('load-proxies', async () => {
+// Load keys từ file
+ipcMain.handle('load-keys', async () => {
     const filePath = path.join(app.getPath('userData'), 'keys.json');
     try {
         if (fs.existsSync(filePath)) {
             const data = fs.readFileSync(filePath, 'utf-8');
-            return { success: true, proxies: JSON.parse(data) };
+            return { success: true, keys: JSON.parse(data) };
         }
-        return { success: true, proxies: [] };
+        return { success: true, keys: [] };
     } catch (err) {
         return { success: false, error: err.message };
     }
