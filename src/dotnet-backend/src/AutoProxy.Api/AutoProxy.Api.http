@@ -1,0 +1,6 @@
+@AutoProxy.Api_HostAddress = http://localhost:5270
+
+GET {{AutoProxy.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
