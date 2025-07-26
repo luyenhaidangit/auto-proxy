@@ -1,0 +1,221 @@
+/* Smooth Hover Effects for Better UX */
+
+/* Table row hover - smooth and subtle */
+.proxy-table tbody tr,
+.request-table tbody tr {
+    transition: background-color 0.2s ease;
+    position: relative;
+}
+
+.proxy-table tbody tr:hover,
+.request-table tbody tr:hover {
+    background: rgba(64, 64, 64, 0.3);
+    cursor: pointer;
+}
+
+/* Table cell hover - very subtle */
+.proxy-table td,
+.request-table td {
+    transition: background-color 0.15s ease;
+}
+
+.proxy-table td:hover,
+.request-table td:hover {
+    background: rgba(74, 158, 255, 0.1);
+}
+
+/* Button hover effects - smooth color transitions */
+.btn {
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn:hover {
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Navigation hover - smooth background */
+.nav-item {
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.nav-item:hover {
+    background: rgba(64, 64, 64, 0.5);
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Option button hover */
+.option-btn {
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.option-btn:hover {
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Close button hover */
+.close-btn {
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.close-btn:hover {
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Chat support hover */
+.chat-support {
+    transition: background-color 0.2s ease;
+}
+
+.chat-support:hover {
+    transition: background-color 0.2s ease;
+}
+
+/* Search box hover */
+.search-box input {
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.search-box input:hover {
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+/* Select dropdown hover */
+.local-address select {
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.local-address select:hover {
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+/* Modal backdrop hover */
+.modal {
+    transition: background-color 0.3s ease;
+}
+
+/* Status badge hover */
+.status-badge {
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.status-badge:hover {
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Checkbox hover */
+input[type="checkbox"] {
+    transition: border-color 0.2s ease;
+}
+
+input[type="checkbox"]:hover {
+    transition: border-color 0.2s ease;
+}
+
+/* Action button hover in table */
+.action-cell .btn {
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.action-cell .btn:hover {
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* Icon hover in table */
+.action-cell i {
+    transition: color 0.15s ease;
+}
+
+.action-cell i:hover {
+    transition: color 0.15s ease;
+}
+
+/* Mobile specific - reduce transition time for better performance */
+@media (max-width: 767px) {
+    .proxy-table tbody tr,
+    .request-table tbody tr {
+        transition: background-color 0.15s ease;
+    }
+    
+    .btn {
+        transition: background-color 0.15s ease, color 0.15s ease;
+    }
+    
+    .nav-item {
+        transition: background-color 0.15s ease, color 0.15s ease;
+    }
+}
+
+/* Touch devices - disable transitions for better performance */
+@media (hover: none) and (pointer: coarse) {
+    .proxy-table tbody tr,
+    .request-table tbody tr,
+    .btn,
+    .nav-item,
+    .option-btn,
+    .close-btn,
+    .chat-support,
+    .search-box input,
+    .local-address select,
+    .status-badge,
+    input[type="checkbox"],
+    .action-cell .btn,
+    .action-cell i {
+        transition: none;
+    }
+}
+
+/* Performance mode - disable all transitions */
+.performance-mode * {
+    transition: none !important;
+}
+
+/* Reduced motion - disable all transitions */
+@media (prefers-reduced-motion: reduce) {
+    .proxy-table tbody tr,
+    .request-table tbody tr,
+    .btn,
+    .nav-item,
+    .option-btn,
+    .close-btn,
+    .chat-support,
+    .search-box input,
+    .local-address select,
+    .status-badge,
+    input[type="checkbox"],
+    .action-cell .btn,
+    .action-cell i {
+        transition: none !important;
+    }
+}
+
+/* High contrast mode - keep transitions for accessibility */
+@media (prefers-contrast: high) {
+    .proxy-table tbody tr:hover,
+    .request-table tbody tr:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .nav-item:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+}
+
+/* Dark mode specific adjustments */
+.dark-theme .proxy-table tbody tr:hover,
+.dark-theme .request-table tbody tr:hover {
+    background: rgba(64, 64, 64, 0.3);
+}
+
+.dark-theme .nav-item:hover {
+    background: rgba(64, 64, 64, 0.5);
+}
+
+/* Light mode support (if needed) */
+.light-theme .proxy-table tbody tr:hover,
+.light-theme .request-table tbody tr:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.light-theme .nav-item:hover {
+    background: rgba(0, 0, 0, 0.1);
+} 

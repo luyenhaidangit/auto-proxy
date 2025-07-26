@@ -115,8 +115,9 @@ body {
 }
 
 .nav-item:hover {
-    background: linear-gradient(90deg, var(--dark-border) 0%, transparent 100%);
+    background: rgba(64, 64, 64, 0.5);
     color: var(--text-primary);
+    transition: background-color 0.2s ease;
 }
 
 .nav-item.active {
@@ -344,6 +345,7 @@ body {
 
 .btn-primary:hover {
     background: linear-gradient(135deg, #3a8eef 0%, #2a7edf 100%);
+    transition: background-color 0.2s ease;
 }
 
 .btn-success {
@@ -354,6 +356,7 @@ body {
 
 .btn-success:hover {
     background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+    transition: background-color 0.2s ease;
 }
 
 .btn-danger {
@@ -364,6 +367,7 @@ body {
 
 .btn-danger:hover {
     background: linear-gradient(135deg, #c82333 0%, #b71c1c 100%);
+    transition: background-color 0.2s ease;
 }
 
 /* Enhanced Table Styles */
@@ -408,13 +412,13 @@ body {
 
 .proxy-table tbody tr:hover,
 .request-table tbody tr:hover {
-    background: linear-gradient(90deg, var(--dark-border) 0%, transparent 100%);
-    transform: scale(1.01);
+    background: rgba(64, 64, 64, 0.3);
+    transition: background-color 0.2s ease;
 }
 
 .proxy-table tbody tr,
 .request-table tbody tr {
-    transition: var(--transition);
+    transition: background-color 0.2s ease;
 }
 
 /* Enhanced Status Badges */
@@ -535,7 +539,8 @@ body {
 
 .close-btn:hover {
     color: var(--text-primary);
-    background: var(--dark-border);
+    background: rgba(64, 64, 64, 0.5);
+    transition: background-color 0.2s ease;
 }
 
 .modal-body {
@@ -600,6 +605,7 @@ body {
 .option-btn:hover {
     background: #555555;
     color: var(--text-primary);
+    transition: background-color 0.2s ease;
 }
 
 .option-btn.active {
@@ -657,6 +663,7 @@ body {
 
 .chat-support:hover {
     background: linear-gradient(135deg, #3a8eef 0%, #2a7edf 100%);
+    transition: background-color 0.2s ease;
 }
 
 .chat-support i {

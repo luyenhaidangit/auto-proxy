@@ -74,20 +74,20 @@
     text-overflow: ellipsis;
 }
 
-/* Remove any remaining hover transforms */
+/* Remove any remaining hover transforms but keep smooth transitions */
 *:hover {
     transform: none !important;
     scale: none !important;
     translate: none !important;
+    transition: background-color 0.2s ease !important;
 }
 
 /* Keep only essential hover effects */
 .btn:hover,
 .nav-item:hover,
 .option-btn:hover {
-    /* Only allow background color changes */
-    background-color: inherit;
-    color: inherit;
+    /* Allow smooth background color changes */
+    transition: background-color 0.2s ease;
 }
 
 /* Ensure text truncation works without hover expansion */
@@ -136,6 +136,7 @@
     .option-btn:hover {
         transform: none;
         box-shadow: none;
+        transition: none;
     }
 }
 
@@ -144,6 +145,7 @@
     transform: none !important;
     box-shadow: none !important;
     scale: none !important;
+    transition: none !important;
 }
 
 /* Reduced motion - disable all hover effects */
