@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoProxy - Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .status {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+        .feature-list {
+            text-align: left;
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .feature-list h3 {
+            margin-top: 0;
+        }
+        .feature-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        .feature-list li:before {
+            content: "✓ ";
+            color: #4CAF50;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 AutoProxy</h1>
+        
+        <div class="status">
+            <h2>Electron App Test</h2>
+            <p>✅ Electron.js is running successfully!</p>
+            <p>🖥️ Desktop application framework is working</p>
+        </div>
+
+        <div class="feature-list">
+            <h3>Project Components:</h3>
+            <ul>
+                <li>Electron.js Desktop App (Current)</li>
+                <li>Angular UI Frontend</li>
+                <li>.NET Backend API</li>
+                <li>Integrated Development Environment</li>
+            </ul>
+        </div>
+
+        <div class="status">
+            <p><strong>Next Steps:</strong></p>
+            <p>1. Build Angular UI → <code>cd ../angular-ui && npm run build</code></p>
+            <p>2. Build .NET Backend → <code>cd ../dotnet-backend && dotnet publish</code></p>
+            <p>3. Integrate all components in Electron</p>
+        </div>
+    </div>
+
+    <script>
+        // Simple test script
+        console.log('AutoProxy Electron App loaded successfully!');
+        
+        // Add some interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM fully loaded');
+            
+            // Add click effect to status boxes
+            const statusBoxes = document.querySelectorAll('.status');
+            statusBoxes.forEach(box => {
+                box.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 100);
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

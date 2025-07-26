@@ -1,0 +1,38 @@
+{
+  "name": "electron-app",
+  "version": "1.0.0",
+  "description": "Electron desktop app using Angular frontend and .NET backend",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^30.0.0",
+    "electron-builder": "^25.0.0"
+  },
+  "build": {
+    "appId": "com.yourcompany.autoproxy",
+    "productName": "AutoProxy",
+    "files": [
+      "../angular-ui/dist/",
+      "../dotnet-backend/src/AutoProxy.Api/bin/Release/net8.0/win-x64/publish/",
+      "main.js"
+    ],
+    "directories": {
+      "output": "build"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "icon.ico"
+    },
+    "extraResources": [
+      {
+        "from": "../dotnet-backend/src/AutoProxy.Api/bin/Release/net8.0/win-x64/publish/",
+        "to": "backend"
+      }
+    ]
+  }
+}
