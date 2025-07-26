@@ -16,6 +16,10 @@ class UIManager {
         // Click outside modal to close
         document.addEventListener('click', (e) => {
             if (e.target.classList.contains('modal')) {
+                // Don't close add key modal when clicking outside
+                if (e.target.id === 'addKeyModal') {
+                    return;
+                }
                 this.closeModal(e.target);
             }
         });

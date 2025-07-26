@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, Menu, Tray, nativeImage } = require('electron');
 const path = require('path');
 const Store = require('electron-store');
 
@@ -7,6 +7,7 @@ const store = new Store();
 
 // Keep a global reference of the window object
 let mainWindow;
+let tray;
 
 // Development mode check
 const isDev = process.env.NODE_ENV === 'development';
@@ -52,9 +53,59 @@ function createWindow() {
     // Handle window state
     mainWindow.on('close', () => {
         if (!app.isQuiting) {
-            app.hide();
+            mainWindow.hide();
             return false;
         }
+    });
+
+    // Create tray
+    createTray();
+}
+
+// Create tray
+function createTray() {
+    // Create tray icon - use default icon if custom icon doesn't exist
+    let icon;
+    try {
+        const iconPath = path.join(__dirname, 'assets', 'icon.ico');
+        icon = nativeImage.createFromPath(iconPath);
+    } catch (error) {
+        // Use default icon if custom icon doesn't exist
+        icon = nativeImage.createFromDataURL('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==');
+    }
+
+    tray = new Tray(icon);
+    tray.setToolTip('VN Proxy Manager');
+
+    // Create tray menu
+    const trayMenu = Menu.buildFromTemplate([
+        {
+            label: 'Show App',
+            click: () => {
+                mainWindow.show();
+            }
+        },
+        {
+            label: 'Hide App',
+            click: () => {
+                mainWindow.hide();
+            }
+        },
+        { type: 'separator' },
+        {
+            label: 'Quit',
+            click: () => {
+                app.isQuiting = true;
+                app.quit();
+            }
+        }
+    ]);
+
+    tray.setContextMenu(trayMenu);
+
+    // Double click to show window
+    tray.on('double-click', () => {
+        mainWindow.show();
     });
 }
 
@@ -200,4 +251,7 @@ app.on('web-contents-created', (event, contents) => {
 // Handle app quit
 app.on('before-quit', () => {
     app.isQuiting = true;
+    if (tray) {
+        tray.destroy();
+    }
 });
