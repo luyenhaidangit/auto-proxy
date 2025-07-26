@@ -1,0 +1,581 @@
+/* Responsive Design for VN Proxy Manager */
+
+/* Large Desktop (1400px and up) */
+@media (min-width: 1400px) {
+    .sidebar {
+        width: 280px;
+    }
+    
+    .header {
+        padding: 0 40px;
+    }
+    
+    .page {
+        padding: 30px;
+    }
+    
+    .modal-content {
+        max-width: 800px;
+    }
+}
+
+/* Desktop (1200px - 1399px) */
+@media (max-width: 1399px) and (min-width: 1200px) {
+    .sidebar {
+        width: 250px;
+    }
+    
+    .header {
+        padding: 0 30px;
+    }
+    
+    .page {
+        padding: 20px;
+    }
+    
+    /* Desktop-specific improvements */
+    .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    .nav-item:hover {
+        transform: translateX(2px);
+    }
+}
+
+/* Tablet (768px - 1199px) */
+@media (max-width: 1199px) and (min-width: 768px) {
+    #app {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        border-right: none;
+        border-bottom: 1px solid #404040;
+    }
+    
+    .sidebar-header {
+        padding: 15px 20px;
+        border-bottom: none;
+        border-right: 1px solid #404040;
+    }
+    
+    .sidebar-nav {
+        flex: 1;
+        padding: 0;
+    }
+    
+    .sidebar-nav ul {
+        display: flex;
+        gap: 0;
+    }
+    
+    .nav-item {
+        padding: 15px 20px;
+        border-right: 1px solid #404040;
+    }
+    
+    .sidebar-footer {
+        padding: 15px 20px;
+        border-top: none;
+        border-left: 1px solid #404040;
+    }
+    
+    .main-content {
+        flex: 1;
+    }
+    
+    .header {
+        height: 70px;
+        padding: 0 20px;
+    }
+    
+    .header-left h1 {
+        font-size: 20px;
+    }
+    
+    .page {
+        padding: 15px;
+    }
+    
+    .page-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+    
+    .search-box {
+        max-width: none;
+    }
+    
+    .action-buttons {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    /* Table responsive */
+    .proxy-table-container,
+    .request-table-container {
+        overflow-x: auto;
+    }
+    
+    .proxy-table,
+    .request-table {
+        min-width: 800px;
+    }
+    
+    /* Modal responsive */
+    .modal-content {
+        width: 95%;
+        max-width: 500px;
+    }
+    
+    /* Tablet-specific improvements */
+    .btn {
+        touch-action: manipulation;
+    }
+    
+    .nav-item {
+        touch-action: manipulation;
+    }
+    
+    /* Improve table scrolling on tablet */
+    .proxy-table-container,
+    .request-table-container {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Mobile (320px - 767px) */
+@media (max-width: 767px) {
+    /* Add viewport meta tag support */
+    body {
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+    }
+    
+    #app {
+        flex-direction: column;
+    }
+    #app {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        border-right: none;
+        border-bottom: 1px solid #404040;
+        position: relative;
+    }
+    
+    .sidebar-header {
+        padding: 10px 15px;
+        border-bottom: none;
+        border-right: 1px solid #404040;
+    }
+    
+    .logo {
+        font-size: 16px;
+    }
+    
+    .logo i {
+        font-size: 20px;
+    }
+    
+    .sidebar-nav {
+        flex: 1;
+        padding: 0;
+    }
+    
+    .sidebar-nav ul {
+        display: flex;
+        gap: 0;
+    }
+    
+    .nav-item {
+        padding: 10px 12px;
+        border-right: 1px solid #404040;
+        font-size: 12px;
+        gap: 8px;
+    }
+    
+    .nav-item span {
+        display: none;
+    }
+    
+    .nav-item i {
+        font-size: 16px;
+    }
+    
+    .sidebar-footer {
+        padding: 10px 15px;
+        border-top: none;
+        border-left: 1px solid #404040;
+    }
+    
+    .sidebar-footer .nav-item {
+        border: none;
+        padding: 0;
+    }
+    
+    .main-content {
+        flex: 1;
+    }
+    
+    .header {
+        height: 60px;
+        padding: 0 15px;
+        flex-direction: column;
+        gap: 5px;
+        justify-content: center;
+    }
+    
+    .header-left h1 {
+        font-size: 16px;
+    }
+    
+    .header-right {
+        gap: 10px;
+    }
+    
+    .local-address {
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .local-address label {
+        font-size: 11px;
+        white-space: nowrap;
+    }
+    
+    .local-address select {
+        padding: 6px 8px;
+        font-size: 12px;
+    }
+    
+    .page {
+        padding: 10px;
+    }
+    
+    .page-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+    }
+    
+    .search-box {
+        max-width: none;
+    }
+    
+    .search-box input {
+        padding: 8px 12px 8px 35px;
+        font-size: 13px;
+    }
+    
+    .action-buttons {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .btn {
+        padding: 8px 12px;
+        font-size: 12px;
+        gap: 6px;
+    }
+    
+    .btn i {
+        font-size: 12px;
+    }
+    
+    /* Table responsive for mobile */
+    .proxy-table-container,
+    .request-table-container {
+        overflow-x: auto;
+        border-radius: 6px;
+    }
+    
+    .proxy-table,
+    .request-table {
+        min-width: 600px;
+        font-size: 12px;
+    }
+    
+    .proxy-table th,
+    .proxy-table td,
+    .request-table th,
+    .request-table td {
+        padding: 8px 10px;
+    }
+    
+    /* Hide less important columns on mobile */
+    .proxy-table th:nth-child(4),
+    .proxy-table td:nth-child(4),
+    .proxy-table th:nth-child(6),
+    .proxy-table td:nth-child(6) {
+        display: none;
+    }
+    
+    /* Modal responsive for mobile */
+    .modal-content {
+        width: 98%;
+        max-width: none;
+        margin: 10px;
+    }
+    
+    .modal-header {
+        padding: 15px;
+    }
+    
+    .modal-header h3 {
+        font-size: 16px;
+    }
+    
+    .modal-body {
+        padding: 15px;
+    }
+    
+    .modal-footer {
+        padding: 15px;
+    }
+    
+    /* Export modal specific mobile */
+    .export-options {
+        gap: 6px;
+    }
+    
+    .option-btn {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+    
+    #exportContent {
+        height: 100px;
+        font-size: 11px;
+    }
+    
+    /* Chat support mobile */
+    .chat-support {
+        width: 45px;
+        height: 45px;
+        bottom: 15px;
+        right: 15px;
+    }
+    
+    .chat-support i {
+        font-size: 18px;
+    }
+    
+    /* Mobile-specific improvements */
+    .btn {
+        touch-action: manipulation;
+    }
+    
+    .nav-item {
+        touch-action: manipulation;
+    }
+    
+    /* Improve table scrolling on mobile */
+    .proxy-table-container,
+    .request-table-container {
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+    }
+    
+    /* Add mobile-friendly focus states */
+    .btn:focus,
+    .nav-item:focus,
+    .search-box input:focus {
+        outline: 2px solid #4a9eff;
+        outline-offset: 2px;
+    }
+}
+
+/* Extra Small Mobile (320px - 479px) */
+@media (max-width: 479px) {
+    .sidebar-nav ul {
+        justify-content: space-around;
+    }
+    
+    .nav-item {
+        flex-direction: column;
+        text-align: center;
+        padding: 8px 6px;
+    }
+    
+    .header {
+        height: auto;
+        padding: 8px 10px;
+    }
+    
+    .header-left h1 {
+        font-size: 14px;
+    }
+    
+    .local-address {
+        flex-direction: column;
+        gap: 2px;
+    }
+    
+    .local-address label {
+        font-size: 10px;
+    }
+    
+    .local-address select {
+        padding: 4px 6px;
+        font-size: 11px;
+    }
+    
+    .page {
+        padding: 8px;
+    }
+    
+    .page-header {
+        gap: 8px;
+        margin-bottom: 12px;
+        padding-bottom: 12px;
+    }
+    
+    .search-box input {
+        padding: 6px 10px 6px 30px;
+        font-size: 12px;
+    }
+    
+    .action-buttons {
+        gap: 6px;
+    }
+    
+    .btn {
+        padding: 6px 10px;
+        font-size: 11px;
+        gap: 4px;
+    }
+    
+    .btn i {
+        font-size: 11px;
+    }
+    
+    /* Hide more columns on extra small screens */
+    .proxy-table th:nth-child(5),
+    .proxy-table td:nth-child(5) {
+        display: none;
+    }
+    
+    .modal-content {
+        margin: 5px;
+    }
+    
+    .modal-header {
+        padding: 12px;
+    }
+    
+    .modal-body {
+        padding: 12px;
+    }
+    
+    .modal-footer {
+        padding: 12px;
+    }
+}
+
+/* Landscape Mobile (480px - 767px) */
+@media (max-width: 767px) and (orientation: landscape) {
+    .sidebar {
+        flex-direction: row;
+    }
+    
+    .nav-item span {
+        display: inline;
+    }
+    
+    .header {
+        height: 50px;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    
+    .page-header {
+        flex-direction: row;
+        align-items: center;
+    }
+}
+
+/* Print styles */
+@media print {
+    .sidebar,
+    .header,
+    .action-buttons,
+    .chat-support {
+        display: none;
+    }
+    
+    .main-content {
+        margin: 0;
+        padding: 0;
+    }
+    
+    .page {
+        padding: 0;
+    }
+    
+    .proxy-table-container,
+    .request-table-container {
+        border: 1px solid #000;
+        box-shadow: none;
+    }
+    
+    .proxy-table,
+    .request-table {
+        border-collapse: collapse;
+    }
+    
+    .proxy-table th,
+    .proxy-table td,
+    .request-table th,
+    .request-table td {
+        border: 1px solid #000;
+        padding: 8px;
+    }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .btn,
+    .nav-item,
+    .search-box input,
+    .modal-content {
+        border-width: 0.5px;
+    }
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .chat-support:hover {
+        transform: none;
+    }
+}
+
+/* Dark mode support for system preference */
+@media (prefers-color-scheme: dark) {
+    /* Already dark theme, no changes needed */
+}
+
+/* Light mode support (if needed in future) */
+@media (prefers-color-scheme: light) {
+    /* Could add light theme styles here */
+} 
