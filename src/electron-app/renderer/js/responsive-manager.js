@@ -390,11 +390,7 @@ class ResponsiveManager {
         if (targetPage) {
             this.switchPage(targetPage);
 
-            // Add mobile navigation feedback
-            item.classList.add('mobile-active');
-            setTimeout(() => {
-                item.classList.remove('mobile-active');
-            }, 200);
+            // Mobile navigation without expansion effects
         }
     }
 
@@ -550,7 +546,7 @@ class ResponsiveManager {
                     cell.setAttribute('title', text);
                     cell.classList.add('text-truncate');
 
-                    // Add expand/collapse functionality for mobile
+                    // Keep mobile expansion simple without hover effects
                     if (this.isMobile) {
                         cell.addEventListener('click', () => {
                             this.toggleCellExpansion(cell);

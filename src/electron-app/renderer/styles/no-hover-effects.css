@@ -1,0 +1,156 @@
+/* No Hover Expansion Effects */
+
+/* Disable all hover expansion effects */
+.text-truncate:hover,
+.url-cell:hover .url-full,
+.key-cell:hover .key-full,
+.ip-cell:hover .ip-full,
+.status-badge.long-text:hover,
+.proxy-table td:hover,
+.request-table td:hover {
+    /* No hover expansion - keep normal state */
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    position: static;
+    z-index: auto;
+    background: transparent;
+    border: none;
+    padding: inherit;
+    margin: inherit;
+    box-shadow: none;
+    transform: none;
+    max-width: inherit;
+    min-width: inherit;
+}
+
+/* Keep only simple hover effects */
+.btn:hover {
+    /* Only color changes, no transforms */
+    transform: none;
+    box-shadow: none;
+}
+
+.nav-item:hover {
+    /* Only background color changes */
+    transform: none;
+}
+
+.logo:hover {
+    transform: none;
+}
+
+.chat-support:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.close-btn:hover {
+    transform: none;
+}
+
+.option-btn:hover {
+    transform: none;
+}
+
+/* Ensure mobile expansion works without hover */
+.cell-expandable {
+    cursor: pointer;
+}
+
+.cell-expandable.expanded {
+    white-space: normal;
+    word-wrap: break-word;
+    min-height: 60px;
+    background: var(--dark-border);
+    border-radius: var(--border-radius-sm);
+    padding: var(--spacing-sm);
+    margin: var(--spacing-xs);
+}
+
+.cell-expandable:not(.expanded) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Remove any remaining hover transforms */
+*:hover {
+    transform: none !important;
+    scale: none !important;
+    translate: none !important;
+}
+
+/* Keep only essential hover effects */
+.btn:hover,
+.nav-item:hover,
+.option-btn:hover {
+    /* Only allow background color changes */
+    background-color: inherit;
+    color: inherit;
+}
+
+/* Ensure text truncation works without hover expansion */
+.text-truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+    position: relative;
+}
+
+/* Mobile specific - no hover effects */
+@media (max-width: 767px) {
+    .text-truncate:hover,
+    .url-cell:hover .url-full,
+    .key-cell:hover .url-full,
+    .ip-cell:hover .ip-full,
+    .status-badge.long-text:hover {
+        display: none;
+    }
+    
+    /* Only allow tap expansion on mobile */
+    .cell-expandable {
+        cursor: pointer;
+    }
+    
+    .cell-expandable:active {
+        background: var(--dark-border);
+    }
+}
+
+/* Touch devices - disable all hover effects */
+@media (hover: none) and (pointer: coarse) {
+    .text-truncate:hover,
+    .url-cell:hover .url-full,
+    .key-cell:hover .key-full,
+    .ip-cell:hover .ip-full,
+    .status-badge.long-text:hover,
+    .proxy-table td:hover,
+    .request-table td:hover {
+        display: none;
+    }
+    
+    .btn:hover,
+    .nav-item:hover,
+    .option-btn:hover {
+        transform: none;
+        box-shadow: none;
+    }
+}
+
+/* Performance mode - disable all hover effects */
+.performance-mode *:hover {
+    transform: none !important;
+    box-shadow: none !important;
+    scale: none !important;
+}
+
+/* Reduced motion - disable all hover effects */
+@media (prefers-reduced-motion: reduce) {
+    *:hover {
+        transform: none !important;
+        transition: none !important;
+        animation: none !important;
+    }
+} 

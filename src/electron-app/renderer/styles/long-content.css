@@ -10,18 +10,7 @@
 }
 
 .text-truncate:hover {
-    overflow: visible;
-    white-space: normal;
-    word-wrap: break-word;
-    background: var(--dark-secondary);
-    border: 1px solid var(--dark-border);
-    border-radius: var(--border-radius-sm);
-    padding: var(--spacing-sm);
-    position: absolute;
-    z-index: 1000;
-    min-width: 200px;
-    max-width: 300px;
-    box-shadow: 0 4px 12px var(--shadow-heavy);
+    /* Removed hover expansion - keep normal state */
 }
 
 /* Cell expansion for mobile */
@@ -66,13 +55,7 @@
 
 .proxy-table td:hover,
 .request-table td:hover {
-    overflow: visible;
-    white-space: normal;
-    word-wrap: break-word;
-    background: var(--dark-secondary);
-    border-radius: var(--border-radius-sm);
-    z-index: 10;
-    position: relative;
+    /* Removed hover expansion - keep normal state */
 }
 
 /* Long URL handling */
@@ -105,7 +88,7 @@
 }
 
 .url-cell:hover .url-full {
-    display: block;
+    /* Removed hover expansion - keep normal state */
 }
 
 /* Long key handling */
@@ -139,7 +122,7 @@
 }
 
 .key-cell:hover .key-full {
-    display: block;
+    /* Removed hover expansion - keep normal state */
 }
 
 /* IP address handling */
@@ -169,7 +152,7 @@
 }
 
 .ip-cell:hover .ip-full {
-    display: block;
+    /* Removed hover expansion - keep normal state */
 }
 
 /* Status badge with long text */
@@ -182,11 +165,7 @@
 }
 
 .status-badge.long-text:hover {
-    overflow: visible;
-    white-space: normal;
-    word-wrap: break-word;
-    max-width: 150px;
-    z-index: 1000;
+    /* Removed hover expansion - keep normal state */
 }
 
 /* Action buttons in table */
@@ -278,7 +257,7 @@
     }
     
     .text-truncate:hover {
-        max-width: 200px;
+        /* Removed hover expansion - keep normal state */
     }
     
     .url-cell {
@@ -298,7 +277,7 @@
     }
     
     .status-badge.long-text:hover {
-        max-width: 120px;
+        /* Removed hover expansion - keep normal state */
     }
     
     .action-cell {
@@ -339,7 +318,7 @@
     }
     
     .text-truncate:hover {
-        max-width: 150px;
+        /* Removed hover expansion - keep normal state */
     }
     
     .url-cell {
@@ -359,7 +338,7 @@
     }
     
     .status-badge.long-text:hover {
-        max-width: 80px;
+        /* Removed hover expansion - keep normal state */
     }
     
     .action-cell {
@@ -375,14 +354,6 @@
 
 /* Touch-friendly improvements */
 @media (hover: none) and (pointer: coarse) {
-    .text-truncate:hover,
-    .url-cell:hover .url-full,
-    .key-cell:hover .key-full,
-    .ip-cell:hover .ip-full,
-    .status-badge.long-text:hover {
-        display: none;
-    }
-    
     .cell-expandable {
         cursor: pointer;
     }
@@ -491,12 +462,10 @@
 }
 
 /* Performance optimizations */
-.performance-mode .text-truncate:hover,
-.performance-mode .url-cell:hover .url-full,
-.performance-mode .key-cell:hover .key-full,
-.performance-mode .ip-cell:hover .ip-full,
-.performance-mode .status-badge.long-text:hover {
-    display: none;
+.performance-mode .cell-expandable {
+    white-space: normal;
+    word-wrap: break-word;
+    max-width: none;
 }
 
 .performance-mode .cell-expandable {
@@ -515,22 +484,14 @@
 }
 
 /* Dark mode specific adjustments */
-.dark-theme .text-truncate:hover,
-.dark-theme .url-cell .url-full,
-.dark-theme .key-cell .key-full,
-.dark-theme .ip-cell .ip-full,
-.dark-theme .status-badge.long-text:hover {
+.dark-theme .cell-expandable.expanded {
     background: var(--dark-secondary);
     border-color: var(--dark-border);
     color: var(--text-primary);
 }
 
 /* Light mode support (if needed) */
-.light-theme .text-truncate:hover,
-.light-theme .url-cell .url-full,
-.light-theme .key-cell .key-full,
-.light-theme .ip-cell .ip-full,
-.light-theme .status-badge.long-text:hover {
+.light-theme .cell-expandable.expanded {
     background: #f5f5f5;
     border-color: #ddd;
     color: #333;

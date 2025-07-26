@@ -82,7 +82,7 @@ body {
 }
 
 .logo:hover {
-    transform: scale(1.05);
+    /* Removed hover scale effect */
 }
 
 .logo i {
@@ -117,7 +117,6 @@ body {
 .nav-item:hover {
     background: linear-gradient(90deg, var(--dark-border) 0%, transparent 100%);
     color: var(--text-primary);
-    transform: translateX(4px);
 }
 
 .nav-item.active {
@@ -345,8 +344,6 @@ body {
 
 .btn-primary:hover {
     background: linear-gradient(135deg, #3a8eef 0%, #2a7edf 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px var(--shadow-heavy);
 }
 
 .btn-success {
@@ -357,8 +354,6 @@ body {
 
 .btn-success:hover {
     background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px var(--shadow-heavy);
 }
 
 .btn-danger {
@@ -369,8 +364,6 @@ body {
 
 .btn-danger:hover {
     background: linear-gradient(135deg, #c82333 0%, #b71c1c 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px var(--shadow-heavy);
 }
 
 /* Enhanced Table Styles */
@@ -543,7 +536,6 @@ body {
 .close-btn:hover {
     color: var(--text-primary);
     background: var(--dark-border);
-    transform: scale(1.1);
 }
 
 .modal-body {
@@ -608,7 +600,6 @@ body {
 .option-btn:hover {
     background: #555555;
     color: var(--text-primary);
-    transform: translateY(-1px);
 }
 
 .option-btn.active {
@@ -666,8 +657,6 @@ body {
 
 .chat-support:hover {
     background: linear-gradient(135deg, #3a8eef 0%, #2a7edf 100%);
-    transform: scale(1.1);
-    box-shadow: 0 6px 16px var(--shadow-heavy);
 }
 
 .chat-support i {
