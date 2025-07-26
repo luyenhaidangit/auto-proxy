@@ -24,7 +24,7 @@ class ProxyManager {
             rotateAllBtn.addEventListener('click', () => this.rotateAllProxies());
         }
         if (addProxyBtn) {
-            addProxyBtn.addEventListener('click', () => this.addProxy());
+            addProxyBtn.addEventListener('click', () => this.showAddKeyModal());
         }
 
         // Select all checkbox
@@ -42,6 +42,169 @@ class ProxyManager {
                 this.filterProxies(e.target.value);
             });
         }
+
+        // Add Key Modal Event Listeners
+        this.setupAddKeyModalListeners();
+    }
+
+    setupAddKeyModalListeners() {
+        // Close modal button
+        const closeAddKeyModal = document.getElementById('closeAddKeyModal');
+        if (closeAddKeyModal) {
+            closeAddKeyModal.addEventListener('click', () => {
+                this.closeAddKeyModal();
+            });
+        }
+
+        // Import button
+        const importKeysBtn = document.getElementById('importKeysBtn');
+        if (importKeysBtn) {
+            importKeysBtn.addEventListener('click', () => {
+                this.importKeysFromFile();
+            });
+        }
+
+        // Add keys button
+        const addKeysBtn = document.getElementById('addKeysBtn');
+        if (addKeysBtn) {
+            addKeysBtn.addEventListener('click', () => {
+                this.addKeysFromModal();
+            });
+        }
+
+        // Cancel button
+        const cancelAddKeysBtn = document.getElementById('cancelAddKeysBtn');
+        if (cancelAddKeysBtn) {
+            cancelAddKeysBtn.addEventListener('click', () => {
+                this.closeAddKeyModal();
+            });
+        }
+
+        // Proxy type options
+        const proxyTypeButtons = document.querySelectorAll('[data-proxy-type]');
+        proxyTypeButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                this.toggleProxyType(e.target);
+            });
+        });
+    }
+
+    showAddKeyModal() {
+        const modal = document.getElementById('addKeyModal');
+        if (modal) {
+            modal.classList.add('active');
+
+            // Set default values
+            const keyList = document.getElementById('keyList');
+            if (keyList) {
+                keyList.value = 'Đây là key demo';
+            }
+
+            const regionSelect = document.getElementById('regionSelect');
+            if (regionSelect) {
+                regionSelect.value = 'random';
+            }
+
+            // Set default proxy type
+            const httpsBtn = document.querySelector('[data-proxy-type="https"]');
+            if (httpsBtn) {
+                httpsBtn.classList.add('active');
+            }
+            const socks5Btn = document.querySelector('[data-proxy-type="socks5"]');
+            if (socks5Btn) {
+                socks5Btn.classList.remove('active');
+            }
+        }
+    }
+
+    closeAddKeyModal() {
+        const modal = document.getElementById('addKeyModal');
+        if (modal) {
+            modal.classList.remove('active');
+
+            // Clear form
+            const keyList = document.getElementById('keyList');
+            if (keyList) {
+                keyList.value = '';
+            }
+        }
+    }
+
+    async importKeysFromFile() {
+        try {
+            const result = await window.electronAPI.importKeys();
+            if (result.success) {
+                // Read file content and populate textarea
+                const keyList = document.getElementById('keyList');
+                if (keyList) {
+                    // Simulate reading file content
+                    keyList.value = 'jRw41SVm3ufB3u4AWfCG...\nkLm52TWn4vgC4v5BXgDH...\nmNp63UXo5whD5w6CYhEI...';
+                }
+                window.app.showNotification('Đã import keys từ file', 'success');
+            }
+        } catch (error) {
+            window.app.showNotification('Lỗi khi import keys', 'error');
+        }
+    }
+
+    addKeysFromModal() {
+        const keyList = document.getElementById('keyList');
+        const regionSelect = document.getElementById('regionSelect');
+        const activeProxyType = document.querySelector('[data-proxy-type].active');
+
+        if (!keyList || !keyList.value.trim()) {
+            window.app.showNotification('Vui lòng nhập danh sách keys', 'warning');
+            return;
+        }
+
+        const keys = keyList.value.trim().split('\n').filter(key => key.trim());
+        const region = regionSelect ? regionSelect.value : 'random';
+        const proxyType = activeProxyType ? activeProxyType.dataset.proxyType : 'https';
+
+        // Add new proxies
+        keys.forEach((key, index) => {
+            const newProxy = {
+                id: Date.now() + index,
+                key: key.trim(),
+                proxy: `${proxyType.toUpperCase()}: 192.168.1.${100 + index}:8080`,
+                localProxy: `${proxyType.toUpperCase()}: 127.0.0.1:8080`,
+                ipv4: `192.168.1.${100 + index}`,
+                ipv6: `2001:db8::${index + 1}`,
+                status: 'active',
+                location: this.getLocationByRegion(region),
+                timer: '00:30:00',
+                selected: false,
+                region: region,
+                proxyType: proxyType
+            };
+
+            this.proxies.push(newProxy);
+        });
+
+        this.renderProxies();
+        this.closeAddKeyModal();
+        window.app.showNotification(`Đã thêm ${keys.length} keys thành công`, 'success');
+    }
+
+    getLocationByRegion(region) {
+        const locations = {
+            'random': ['Quảng Ninh', 'Hà Nội', 'TP.HCM', 'Đà Nẵng'],
+            'north': ['Quảng Ninh', 'Hà Nội', 'Hải Phòng', 'Thái Nguyên'],
+            'south': ['TP.HCM', 'Cần Thơ', 'Vũng Tàu', 'Đồng Nai']
+        };
+
+        const regionLocations = locations[region] || locations.random;
+        return regionLocations[Math.floor(Math.random() * regionLocations.length)];
+    }
+
+    toggleProxyType(button) {
+        // Remove active class from all proxy type buttons
+        document.querySelectorAll('[data-proxy-type]').forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        // Add active class to clicked button
+        button.classList.add('active');
     }
 
     async loadProxies() {
@@ -167,9 +330,9 @@ class ProxyManager {
             <td>
                 <div class="key-container">
                     <select class="key-type">
-                        <option value="random">Ngẫu nhiên</option>
-                        <option value="north">Miền Bắc</option>
-                        <option value="south">Miền Nam</option>
+                        <option value="random" ${proxy.region === 'random' ? 'selected' : ''}>Ngẫu nhiên</option>
+                        <option value="north" ${proxy.region === 'north' ? 'selected' : ''}>Miền Bắc</option>
+                        <option value="south" ${proxy.region === 'south' ? 'selected' : ''}>Miền Nam</option>
                     </select>
                     <div class="key-value" title="Click để copy">${proxy.key}</div>
                 </div>
@@ -347,11 +510,6 @@ class ProxyManager {
         } finally {
             window.app.hideLoading();
         }
-    }
-
-    addProxy() {
-        // Show add proxy modal
-        window.app.showNotification('Tính năng thêm proxy đang phát triển', 'info');
     }
 
     async importKeys() {

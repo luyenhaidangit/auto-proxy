@@ -189,6 +189,7 @@
     </div>
 
     <!-- Modals -->
+    <!-- Export Modal -->
     <div id="exportModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -234,6 +235,54 @@
                 <button class="btn btn-success" id="downloadBtn">
                     <i class="fas fa-download"></i>
                     Tải xuống
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add New Key Modal -->
+    <div id="addKeyModal" class="modal">
+        <div class="modal-content add-key-modal">
+            <div class="modal-header">
+                <h3>Thêm key mới</h3>
+                <button class="close-btn" id="closeAddKeyModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="add-key-section">
+                    <label for="keyList">Danh sách key</label>
+                    <div class="key-input-container">
+                        <textarea id="keyList" placeholder="Đây là key demo" rows="8"></textarea>
+                        <button class="btn btn-success import-btn" id="importKeysBtn">
+                            <i class="fas fa-download"></i>
+                            Nhập
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="add-key-section">
+                    <label>Khu vực</label>
+                    <select id="regionSelect" class="region-select">
+                        <option value="random">Ngẫu nhiên</option>
+                        <option value="north">Miền Bắc</option>
+                        <option value="south">Miền Nam</option>
+                    </select>
+                </div>
+                
+                <div class="add-key-section">
+                    <label>Loại Proxy</label>
+                    <div class="proxy-type-options">
+                        <button class="option-btn active" data-proxy-type="https">HTTP(S)</button>
+                        <button class="option-btn" data-proxy-type="socks5">SOCKS5</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="addKeysBtn">
+                    <i class="fas fa-plus"></i>
+                    Thêm Keys
+                </button>
+                <button class="btn btn-secondary" id="cancelAddKeysBtn">
+                    Hủy
                 </button>
             </div>
         </div>
