@@ -1,50 +1,190 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
 const path = require('path');
+const Store = require('electron-store');
+
+// Initialize store for app settings
+const store = new Store();
 
 // Keep a global reference of the window object
 let mainWindow;
 
+// Development mode check
+const isDev = process.env.NODE_ENV === 'development';
+
 function createWindow() {
     // Create the browser window
     mainWindow = new BrowserWindow({
-        width: 1200,
-        height: 800,
+        width: 1400,
+        height: 900,
+        minWidth: 1200,
+        minHeight: 800,
         webPreferences: {
             nodeIntegration: false,
             contextIsolation: true,
-            enableRemoteModule: false
+            enableRemoteModule: false,
+            preload: path.join(__dirname, 'preload.js')
         },
-        icon: path.join(__dirname, 'icon.ico'), // Optional: add icon if available
-        title: 'AutoProxy'
+        icon: path.join(__dirname, 'assets', 'icon.ico'),
+        title: 'VN Proxy Manager',
+        show: false, // Don't show until ready
+        frame: true,
+        titleBarStyle: 'default'
     });
 
-    // Load a simple HTML page for testing
-    mainWindow.loadFile(path.join(__dirname, 'index.html'));
-
-    // Open DevTools in development
-    if (process.env.NODE_ENV === 'development') {
+    // Load the app
+    if (isDev) {
+        mainWindow.loadFile(path.join(__dirname, 'renderer', 'index.html'));
         mainWindow.webContents.openDevTools();
+    } else {
+        mainWindow.loadFile(path.join(__dirname, 'renderer', 'index.html'));
     }
+
+    // Show window when ready
+    mainWindow.once('ready-to-show', () => {
+        mainWindow.show();
+    });
 
     // Emitted when the window is closed
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
+
+    // Handle window state
+    mainWindow.on('close', () => {
+        if (!app.isQuiting) {
+            app.hide();
+            return false;
+        }
+    });
 }
 
-// This method will be called when Electron has finished initialization
-app.whenReady().then(createWindow);
+// Create menu
+function createMenu() {
+    const template = [
+        {
+            label: 'File',
+            submenu: [
+                {
+                    label: 'Export Keys',
+                    accelerator: 'CmdOrCtrl+E',
+                    click: () => {
+                        mainWindow.webContents.send('menu-export-keys');
+                    }
+                },
+                {
+                    label: 'Import Keys',
+                    accelerator: 'CmdOrCtrl+I',
+                    click: () => {
+                        mainWindow.webContents.send('menu-import-keys');
+                    }
+                },
+                { type: 'separator' },
+                {
+                    label: 'Quit',
+                    accelerator: process.platform === 'darwin' ? 'Cmd+Q' : 'Ctrl+Q',
+                    click: () => {
+                        app.quit();
+                    }
+                }
+            ]
+        },
+        {
+            label: 'Edit',
+            submenu: [
+                { role: 'undo' },
+                { role: 'redo' },
+                { type: 'separator' },
+                { role: 'cut' },
+                { role: 'copy' },
+                { role: 'paste' }
+            ]
+        },
+        {
+            label: 'View',
+            submenu: [
+                { role: 'reload' },
+                { role: 'forceReload' },
+                { role: 'toggleDevTools' },
+                { type: 'separator' },
+                { role: 'resetZoom' },
+                { role: 'zoomIn' },
+                { role: 'zoomOut' },
+                { type: 'separator' },
+                { role: 'togglefullscreen' }
+            ]
+        },
+        {
+            label: 'Window',
+            submenu: [
+                { role: 'minimize' },
+                { role: 'close' }
+            ]
+        }
+    ];
 
-// Quit when all windows are closed
+    const menu = Menu.buildFromTemplate(template);
+    Menu.setApplicationMenu(menu);
+}
+
+// IPC Handlers
+ipcMain.handle('get-app-settings', () => {
+    return store.get('settings', {
+        localAddress: '127.0.0.1',
+        theme: 'dark',
+        language: 'vi'
+    });
+});
+
+ipcMain.handle('save-app-settings', (event, settings) => {
+    store.set('settings', settings);
+    return true;
+});
+
+ipcMain.handle('export-keys', async (event, data) => {
+    const { filePath } = await dialog.showSaveDialog(mainWindow, {
+        title: 'Export Keys',
+        defaultPath: 'proxy-keys.txt',
+        filters: [
+            { name: 'Text Files', extensions: ['txt'] },
+            { name: 'All Files', extensions: ['*'] }
+        ]
+    });
+
+    if (filePath) {
+        return { success: true, filePath };
+    }
+    return { success: false };
+});
+
+ipcMain.handle('import-keys', async () => {
+    const { filePaths } = await dialog.showOpenDialog(mainWindow, {
+        title: 'Import Keys',
+        properties: ['openFile'],
+        filters: [
+            { name: 'Text Files', extensions: ['txt'] },
+            { name: 'All Files', extensions: ['*'] }
+        ]
+    });
+
+    if (filePaths && filePaths.length > 0) {
+        return { success: true, filePath: filePaths[0] };
+    }
+    return { success: false };
+});
+
+// App event handlers
+app.whenReady().then(() => {
+    createWindow();
+    createMenu();
+});
+
 app.on('window-all-closed', () => {
-    // On macOS it is common for applications to stay open until explicitly quit
     if (process.platform !== 'darwin') {
         app.quit();
     }
 });
 
 app.on('activate', () => {
-    // On macOS it's common to re-create a window when the dock icon is clicked
     if (BrowserWindow.getAllWindows().length === 0) {
         createWindow();
     }
@@ -55,4 +195,9 @@ app.on('web-contents-created', (event, contents) => {
     contents.on('new-window', (event, navigationUrl) => {
         event.preventDefault();
     });
+});
+
+// Handle app quit
+app.on('before-quit', () => {
+    app.isQuiting = true;
 });

@@ -1,0 +1,349 @@
+/* Theme Styles */
+
+/* Dark Theme (Default) */
+.dark-theme {
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #2d2d2d;
+    --bg-tertiary: #404040;
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --text-muted: #999999;
+    --accent-primary: #4a9eff;
+    --accent-secondary: #3a8eef;
+    --success: #28a745;
+    --warning: #ffc107;
+    --error: #dc3545;
+    --border: #404040;
+    --border-light: #555555;
+    --shadow: rgba(0, 0, 0, 0.3);
+    --shadow-light: rgba(0, 0, 0, 0.1);
+}
+
+/* Light Theme */
+.light-theme {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-tertiary: #e9ecef;
+    --text-primary: #212529;
+    --text-secondary: #6c757d;
+    --text-muted: #adb5bd;
+    --accent-primary: #007bff;
+    --accent-secondary: #0056b3;
+    --success: #28a745;
+    --warning: #ffc107;
+    --error: #dc3545;
+    --border: #dee2e6;
+    --border-light: #ced4da;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --shadow-light: rgba(0, 0, 0, 0.05);
+}
+
+/* Apply theme variables */
+body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.sidebar {
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border);
+}
+
+.header {
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+}
+
+.proxy-table-container,
+.request-table-container {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+}
+
+.proxy-table th,
+.request-table th {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.proxy-table tbody tr:hover,
+.request-table tbody tr:hover {
+    background: var(--bg-tertiary);
+}
+
+.search-box input {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-light);
+    color: var(--text-primary);
+}
+
+.search-box input::placeholder {
+    color: var(--text-muted);
+}
+
+.local-address select {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-light);
+    color: var(--text-primary);
+}
+
+.local-address label {
+    color: var(--text-secondary);
+}
+
+.nav-item {
+    color: var(--text-secondary);
+}
+
+.nav-item:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.nav-item.active {
+    background: var(--accent-primary);
+    color: #ffffff;
+}
+
+.modal-content {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--border);
+}
+
+.modal-header h3 {
+    color: var(--text-primary);
+}
+
+.modal-footer {
+    border-top: 1px solid var(--border);
+}
+
+.close-btn {
+    color: var(--text-secondary);
+}
+
+.close-btn:hover {
+    color: var(--text-primary);
+}
+
+.export-section h4 {
+    color: var(--text-primary);
+}
+
+.export-count {
+    color: var(--text-secondary);
+}
+
+#exportContent {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-light);
+    color: var(--text-primary);
+}
+
+.option-btn {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-light);
+    color: var(--text-secondary);
+}
+
+.option-btn:hover {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+.option-btn.active {
+    background: var(--accent-primary);
+    color: #ffffff;
+    border-color: var(--accent-primary);
+}
+
+.settings-section {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+}
+
+.settings-section h3 {
+    color: var(--text-primary);
+}
+
+.setting-item {
+    border-bottom: 1px solid var(--border);
+}
+
+.setting-item label {
+    color: var(--text-secondary);
+}
+
+.setting-item select {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-light);
+    color: var(--text-primary);
+}
+
+/* Button themes */
+.btn-primary {
+    background: var(--accent-primary);
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background: var(--accent-secondary);
+}
+
+.btn-success {
+    background: var(--success);
+    color: #ffffff;
+}
+
+.btn-danger {
+    background: var(--error);
+    color: #ffffff;
+}
+
+/* Status badges */
+.status-active {
+    background: var(--success);
+    color: #ffffff;
+}
+
+.status-expired {
+    background: var(--error);
+    color: #ffffff;
+}
+
+.status-warning {
+    background: var(--warning);
+    color: #000000;
+}
+
+/* Scrollbar themes */
+.dark-theme ::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+.dark-theme ::-webkit-scrollbar-thumb {
+    background: var(--border-light);
+    border: 2px solid var(--bg-secondary);
+}
+
+.dark-theme ::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+.light-theme ::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+.light-theme ::-webkit-scrollbar-thumb {
+    background: var(--border-light);
+    border: 2px solid var(--bg-secondary);
+}
+
+.light-theme ::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+/* Focus states */
+*:focus {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+    background: var(--accent-primary);
+    color: #ffffff;
+}
+
+::-moz-selection {
+    background: var(--accent-primary);
+    color: #ffffff;
+}
+
+/* Notification themes */
+.notification-success {
+    background: var(--success);
+}
+
+.notification-error {
+    background: var(--error);
+}
+
+.notification-warning {
+    background: var(--warning);
+    color: #000000;
+}
+
+.notification-info {
+    background: var(--accent-primary);
+}
+
+/* Loading spinner themes */
+.spinner {
+    border: 4px solid var(--bg-tertiary);
+    border-top: 4px solid var(--accent-primary);
+}
+
+/* Chat support themes */
+.chat-support {
+    background: var(--accent-primary);
+}
+
+.chat-support:hover {
+    background: var(--accent-secondary);
+}
+
+/* Key value themes */
+.key-value {
+    color: var(--accent-primary);
+}
+
+.key-value:hover {
+    background: var(--bg-tertiary);
+}
+
+/* Key type select themes */
+.key-type {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-light);
+    color: var(--text-primary);
+}
+
+/* Action buttons themes */
+.btn-icon {
+    color: var(--text-secondary);
+}
+
+.btn-icon:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+/* Table cell themes */
+.proxy-table td,
+.request-table td {
+    border-bottom: 1px solid var(--border);
+}
+
+/* Status container themes */
+.status-timer {
+    color: var(--text-secondary);
+}
+
+.status-location {
+    color: var(--text-muted);
+}
+
+/* URL cell themes */
+.url-cell {
+    color: var(--accent-primary);
+}
+
+/* Theme transition */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+} 

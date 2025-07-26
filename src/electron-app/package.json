@@ -1,38 +1,49 @@
 {
-  "name": "electron-app",
+  "name": "vn-proxy-manager",
   "version": "1.0.0",
-  "description": "Electron desktop app using Angular frontend and .NET backend",
+  "description": "VN Proxy Manager - Desktop application for proxy management",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder"
+    "dev": "cross-env NODE_ENV=development electron .",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder --publish=never"
   },
-  "author": "Your Name",
+  "author": "VN Proxy Team",
   "license": "MIT",
   "devDependencies": {
     "electron": "^30.0.0",
-    "electron-builder": "^25.0.0"
+    "electron-builder": "^25.0.0",
+    "cross-env": "^7.0.3"
+  },
+  "dependencies": {
+    "electron-store": "^8.1.0",
+    "electron-updater": "^6.1.7"
   },
   "build": {
-    "appId": "com.yourcompany.autoproxy",
-    "productName": "AutoProxy",
-    "files": [
-      "../angular-ui/dist/",
-      "../dotnet-backend/src/AutoProxy.Api/bin/Release/net8.0/win-x64/publish/",
-      "main.js"
-    ],
+    "appId": "com.vnproxy.manager",
+    "productName": "VN Proxy Manager",
     "directories": {
-      "output": "build"
+      "output": "dist"
     },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*",
+      "assets/**/*",
+      "node_modules/**/*"
+    ],
     "win": {
       "target": "nsis",
-      "icon": "icon.ico"
+      "icon": "assets/icon.ico"
     },
-    "extraResources": [
-      {
-        "from": "../dotnet-backend/src/AutoProxy.Api/bin/Release/net8.0/win-x64/publish/",
-        "to": "backend"
-      }
-    ]
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
   }
 }
