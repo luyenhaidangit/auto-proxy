@@ -161,9 +161,6 @@
     #app {
         flex-direction: column;
     }
-    #app {
-        flex-direction: column;
-    }
     
     .sidebar {
         width: 100%;
