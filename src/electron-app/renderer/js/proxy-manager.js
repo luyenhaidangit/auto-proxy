@@ -56,29 +56,20 @@ class ProxyManager {
             });
         }
 
-        // Import button
+        // Import button - now acts as the main action button
         const importKeysBtn = document.getElementById('importKeysBtn');
         if (importKeysBtn) {
             importKeysBtn.addEventListener('click', () => {
-                this.importKeysFromFile();
-            });
-        }
-
-        // Add keys button
-        const addKeysBtn = document.getElementById('addKeysBtn');
-        if (addKeysBtn) {
-            addKeysBtn.addEventListener('click', () => {
                 this.addKeysFromModal();
             });
         }
 
-        // Cancel button
-        const cancelAddKeysBtn = document.getElementById('cancelAddKeysBtn');
-        if (cancelAddKeysBtn) {
-            cancelAddKeysBtn.addEventListener('click', () => {
+        // Click outside modal to close
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
                 this.closeAddKeyModal();
-            });
-        }
+            }
+        });
     }
 
     showAddKeyModal() {
