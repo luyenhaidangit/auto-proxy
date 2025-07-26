@@ -72,10 +72,10 @@ class ProxyManager {
         if (modal) {
             modal.classList.add('active');
 
-            // Set default values
+            // Clear form instead of setting default values
             const keyList = document.getElementById('keyList');
             if (keyList) {
-                keyList.value = 'Đây là key demo';
+                keyList.value = '';
             }
         }
     }
@@ -90,23 +90,6 @@ class ProxyManager {
             if (keyList) {
                 keyList.value = '';
             }
-        }
-    }
-
-    async importKeysFromFile() {
-        try {
-            const result = await window.electronAPI.importKeys();
-            if (result.success) {
-                // Read file content and populate textarea
-                const keyList = document.getElementById('keyList');
-                if (keyList) {
-                    // Simulate reading file content
-                    keyList.value = 'jRw41SVm3ufB3u4AWfCG...\nkLm52TWn4vgC4v5BXgDH...\nmNp63UXo5whD5w6CYhEI...';
-                }
-                window.app.showNotification('Đã import keys từ file', 'success');
-            }
-        } catch (error) {
-            window.app.showNotification('Lỗi khi import keys', 'error');
         }
     }
 
@@ -128,31 +111,45 @@ class ProxyManager {
 
     async loadProxiesFromKeys() {
         this.proxies = [];
-        for (const key of this.keys) {
-            try {
-                const proxyData = await this.fetchProxyInfo(key);
-                if (proxyData) {
-                    this.proxies.push(proxyData);
-                }
-            } catch (error) {
-                console.error(`Error fetching proxy info for key: ${key}`, error);
-                // Add proxy with error status
-                this.proxies.push({
-                    id: Date.now() + Math.random(),
-                    key: key,
-                    proxy: 'Error fetching data',
-                    localProxy: 'Error fetching data',
-                    ipv4: 'Error',
-                    ipv6: 'Error',
-                    status: 'error',
-                    location: 'Error',
-                    timer: '00:00:00',
-                    selected: false,
-                    region: 'error',
-                    proxyType: 'error'
-                });
-            }
+
+        if (this.keys.length === 0) {
+            this.renderProxies();
+            return;
         }
+
+        // Show loading state
+        window.app.showLoading();
+
+        try {
+            for (const key of this.keys) {
+                try {
+                    const proxyData = await this.fetchProxyInfo(key);
+                    if (proxyData) {
+                        this.proxies.push(proxyData);
+                    }
+                } catch (error) {
+                    console.error(`Error fetching proxy info for key: ${key}`, error);
+                    // Add proxy with error status
+                    this.proxies.push({
+                        id: Date.now() + Math.random(),
+                        key: key,
+                        proxy: 'Error fetching data',
+                        localProxy: 'Error fetching data',
+                        ipv4: 'Error',
+                        ipv6: 'Error',
+                        status: 'error',
+                        location: 'Error',
+                        timer: '00:00:00',
+                        selected: false,
+                        region: 'error',
+                        proxyType: 'error'
+                    });
+                }
+            }
+        } finally {
+            window.app.hideLoading();
+        }
+
         this.renderProxies();
     }
 
@@ -236,6 +233,11 @@ class ProxyManager {
         }
 
         const newKeys = keyList.value.trim().split('\n').filter(key => key.trim());
+
+        if (newKeys.length === 0) {
+            window.app.showNotification('Vui lòng nhập ít nhất một key hợp lệ', 'warning');
+            return;
+        }
 
         // Add new keys to the list
         this.keys = [...this.keys, ...newKeys];
@@ -351,14 +353,119 @@ class ProxyManager {
         const tbody = document.getElementById('proxyTableBody');
         if (!tbody) return;
 
-        tbody.innerHTML = '';
+        if (this.proxies.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="8" class="no-data">
+                        <div class="no-data-content">
+                            <i class="fas fa-info-circle"></i>
+                            <p>Chưa có proxy nào. Hãy thêm key để bắt đầu!</p>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            return;
+        }
 
+        tbody.innerHTML = this.proxies.map(proxy => `
+            <tr data-id="${proxy.id}">
+                <td>
+                    <input type="checkbox" class="proxy-checkbox" ${proxy.selected ? 'checked' : ''}>
+                </td>
+                <td>
+                    <div class="key-info">
+                        <div class="key-text">${proxy.key}</div>
+                        <div class="key-dropdown">
+                            <select class="region-select">
+                                <option value="random" ${proxy.region === 'random' ? 'selected' : ''}>Ngẫu nhiên</option>
+                                <option value="mienbac" ${proxy.region === 'mienbac' ? 'selected' : ''}>Miền Bắc</option>
+                                <option value="mientrung" ${proxy.region === 'mientrung' ? 'selected' : ''}>Miền Trung</option>
+                                <option value="miennam" ${proxy.region === 'miennam' ? 'selected' : ''}>Miền Nam</option>
+                            </select>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="proxy-info">
+                        <div class="proxy-address">${proxy.proxy}</div>
+                        <div class="proxy-type">${proxy.proxyType}</div>
+                    </div>
+                </td>
+                <td>
+                    <div class="local-proxy-info">
+                        <div class="local-proxy-address">${proxy.localProxy}</div>
+                        <div class="local-proxy-status">Local</div>
+                    </div>
+                </td>
+                <td>
+                    <div class="ip-info">
+                        <div class="ipv4">${proxy.ipv4}</div>
+                        <div class="ip-label">IPv4</div>
+                    </div>
+                </td>
+                <td>
+                    <div class="ip-info">
+                        <div class="ipv6">${proxy.ipv6}</div>
+                        <div class="ip-label">IPv6</div>
+                    </div>
+                </td>
+                <td>
+                    <div class="status-info">
+                        <div class="status-badge ${proxy.status}">${this.getStatusText(proxy.status)}</div>
+                        <div class="status-details">
+                            <div class="timer">${proxy.timer}</div>
+                            <div class="location">${proxy.location}</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="action-buttons">
+                        <button class="action-btn view-btn" title="Xem chi tiết">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="action-btn refresh-btn" title="Làm mới">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                        <button class="action-btn delete-btn" title="Xóa">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="btn btn-danger delete-proxy-btn" onclick="proxyManager.deleteProxy('${proxy.id}')">
+                            Xóa
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+
+        // Add event listeners for checkboxes
         this.proxies.forEach(proxy => {
-            const row = this.createProxyRow(proxy);
-            tbody.appendChild(row);
+            const checkbox = tbody.querySelector(`tr[data-id="${proxy.id}"] .proxy-checkbox`);
+            if (checkbox) {
+                checkbox.addEventListener('change', (e) => {
+                    this.toggleProxySelection(proxy.id, e.target.checked);
+                });
+            }
         });
 
-        this.updateSelectAllState();
+        // Add event listeners for action buttons
+        this.proxies.forEach(proxy => {
+            const row = tbody.querySelector(`tr[data-id="${proxy.id}"]`);
+            if (row) {
+                const viewBtn = row.querySelector('.view-btn');
+                const refreshBtn = row.querySelector('.refresh-btn');
+                const deleteBtn = row.querySelector('.delete-btn');
+
+                if (viewBtn) {
+                    viewBtn.addEventListener('click', () => this.viewProxy(proxy.id));
+                }
+                if (refreshBtn) {
+                    refreshBtn.addEventListener('click', () => this.refreshProxy(proxy.id));
+                }
+                if (deleteBtn) {
+                    deleteBtn.addEventListener('click', () => this.deleteProxy(proxy.id));
+                }
+            }
+        });
     }
 
     renderRequests() {
@@ -466,21 +573,31 @@ class ProxyManager {
     }
 
     getStatusText(status) {
-        const statusMap = {
-            'active': 'Hoạt động',
-            'expired': 'Hết hạn',
-            'warning': 'Cảnh báo'
-        };
-        return statusMap[status] || status;
+        switch (status) {
+            case 'active':
+                return 'Hoạt động';
+            case 'expired':
+                return 'Hết hạn';
+            case 'warning':
+                return 'Cảnh báo';
+            case 'error':
+                return 'Lỗi';
+            default:
+                return 'Không xác định';
+        }
     }
 
     toggleProxySelection(proxyId, selected) {
-        if (selected) {
-            this.selectedProxies.add(proxyId);
-        } else {
-            this.selectedProxies.delete(proxyId);
+        const proxy = this.proxies.find(p => p.id === proxyId);
+        if (proxy) {
+            proxy.selected = selected;
+            if (selected) {
+                this.selectedProxies.add(proxyId);
+            } else {
+                this.selectedProxies.delete(proxyId);
+            }
+            this.updateSelectAllState();
         }
-        this.updateSelectAllState();
     }
 
     toggleRequestSelection(requestId, selected) {
@@ -489,32 +606,37 @@ class ProxyManager {
     }
 
     toggleSelectAll(checked) {
-        const checkboxes = document.querySelectorAll('.proxy-checkbox');
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = checked;
-            const proxyId = parseInt(checkbox.closest('tr').dataset.proxyId);
-            this.toggleProxySelection(proxyId, checked);
+        this.proxies.forEach(proxy => {
+            proxy.selected = checked;
+            if (checked) {
+                this.selectedProxies.add(proxy.id);
+            } else {
+                this.selectedProxies.delete(proxy.id);
+            }
         });
+        this.renderProxies();
     }
 
     updateSelectAllState() {
         const selectAllCheckbox = document.getElementById('selectAll');
-        const checkboxes = document.querySelectorAll('.proxy-checkbox');
-        const checkedCount = document.querySelectorAll('.proxy-checkbox:checked').length;
+        if (selectAllCheckbox && this.proxies.length > 0) {
+            const allSelected = this.proxies.every(proxy => proxy.selected);
+            const someSelected = this.proxies.some(proxy => proxy.selected);
 
-        if (selectAllCheckbox) {
-            selectAllCheckbox.checked = checkedCount === checkboxes.length && checkboxes.length > 0;
-            selectAllCheckbox.indeterminate = checkedCount > 0 && checkedCount < checkboxes.length;
+            selectAllCheckbox.checked = allSelected;
+            selectAllCheckbox.indeterminate = someSelected && !allSelected;
         }
     }
 
     filterProxies(searchTerm) {
-        const rows = document.querySelectorAll('#proxyTableBody tr');
-        const term = searchTerm.toLowerCase();
+        const tbody = document.getElementById('proxyTableBody');
+        if (!tbody) return;
 
+        const rows = tbody.querySelectorAll('tr');
         rows.forEach(row => {
             const text = row.textContent.toLowerCase();
-            row.style.display = text.includes(term) ? '' : 'none';
+            const matches = text.includes(searchTerm.toLowerCase());
+            row.style.display = matches ? '' : 'none';
         });
     }
 
@@ -522,18 +644,31 @@ class ProxyManager {
         await this.refreshAllProxies();
     }
 
-    async exportAllProxies() {
-        try {
-            const selectedProxies = this.proxies.filter(p => this.selectedProxies.has(p.id));
-            if (selectedProxies.length === 0) {
-                window.app.showNotification('Vui lòng chọn proxy để xuất', 'warning');
-                return;
-            }
-
-            window.app.exportManager.showExportModal(selectedProxies);
-        } catch (error) {
-            window.app.showNotification('Lỗi khi xuất proxy', 'error');
+    exportAllProxies() {
+        if (this.proxies.length === 0) {
+            window.app.showNotification('Không có proxy nào để xuất', 'warning');
+            return;
         }
+
+        const exportData = this.proxies.map(proxy => ({
+            key: proxy.key,
+            proxy: proxy.proxy,
+            ipv4: proxy.ipv4,
+            ipv6: proxy.ipv6,
+            location: proxy.location,
+            status: proxy.status,
+            timer: proxy.timer
+        }));
+
+        const dataStr = JSON.stringify(exportData, null, 2);
+        const dataBlob = new Blob([dataStr], { type: 'application/json' });
+
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(dataBlob);
+        link.download = 'proxies.json';
+        link.click();
+
+        window.app.showNotification('Đã xuất danh sách proxy', 'success');
     }
 
     async rotateAllProxies() {
@@ -585,10 +720,20 @@ class ProxyManager {
     }
 
     deleteProxy(proxyId) {
-        if (confirm('Bạn có chắc muốn xóa proxy này?')) {
+        const proxy = this.proxies.find(p => p.id === proxyId);
+        if (proxy) {
+            // Remove from keys array
+            this.keys = this.keys.filter(key => key !== proxy.key);
+
+            // Remove from proxies array
             this.proxies = this.proxies.filter(p => p.id !== proxyId);
-            this.selectedProxies.delete(proxyId);
+
+            // Save updated keys
+            this.saveKeysToFile();
+
+            // Re-render
             this.renderProxies();
+
             window.app.showNotification('Đã xóa proxy', 'success');
         }
     }
@@ -605,6 +750,24 @@ class ProxyManager {
         this.loadProxies();
         if (window.app.currentPage === 'request') {
             this.loadRequests();
+        }
+    }
+
+    viewProxy(proxyId) {
+        const proxy = this.proxies.find(p => p.id === proxyId);
+        if (proxy) {
+            // Show proxy details in a modal or notification
+            const details = `
+                Key: ${proxy.key}
+                Proxy: ${proxy.proxy}
+                IPv4: ${proxy.ipv4}
+                IPv6: ${proxy.ipv6}
+                Location: ${proxy.location}
+                Status: ${this.getStatusText(proxy.status)}
+                Timer: ${proxy.timer}
+            `;
+            window.app.showNotification('Thông tin proxy', 'info');
+            console.log('Proxy details:', details);
         }
     }
 } 
