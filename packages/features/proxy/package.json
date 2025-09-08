@@ -1,0 +1,39 @@
+{
+  "name": "@auto-proxy/features-proxy",
+  "version": "0.1.0",
+  "description": "Proxy feature module for Auto Proxy",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint . --ext .ts,.tsx",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.1",
+    "@auto-proxy/ui": "workspace:*",
+    "@auto-proxy/core": "workspace:*",
+    "@auto-proxy/ipc-sdk": "workspace:*",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "typescript": "^5.3.3",
+    "tsup": "^8.0.1"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  }
+}

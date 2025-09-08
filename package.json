@@ -1,0 +1,80 @@
+{
+  "name": "auto-proxy",
+  "version": "0.1.0",
+  "description": "Modern Electron app with secure Main-Preload-Renderer architecture",
+  "private": true,
+  "main": "dist/main/main.js",
+  "type": "module",
+  "scripts": {
+    "setup": "node scripts/setup.js",
+    "dev": "cross-env NODE_ENV=development electron-vite dev",
+    "build": "electron-vite build && electron-builder",
+    "build:only": "electron-vite build",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "e2e": "playwright test",
+    "preview": "electron-vite preview"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^20.10.0",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "cross-env": "^7.0.3",
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1",
+    "electron-vite": "^2.0.0",
+    "eslint": "^8.55.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.10",
+    "vitest": "^1.1.0",
+    "zod": "^3.22.4"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "winston": "^3.11.0",
+    "dotenv": "^16.3.1"
+  },
+  "build": {
+    "appId": "com.autoproxy.app",
+    "productName": "Auto Proxy",
+    "directories": {
+      "output": "build"
+    },
+    "files": [
+      "dist/**",
+      "resources/**",
+      "node_modules/**"
+    ],
+    "extraResources": [
+      {
+        "from": "resources/",
+        "to": "resources"
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": "dmg"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}
