@@ -1,25 +1,72 @@
 /* No Hover Expansion Effects */
 
+/* ULTIMATE TABLE HOVER DISABLE - MUST BE FIRST */
+.proxy-table,
+.request-table,
+.proxy-table-container,
+.request-table-container,
+.table-responsive {
+    pointer-events: auto;
+}
+
+.proxy-table *,
+.request-table *,
+.proxy-table-container *,
+.request-table-container *,
+.table-responsive * {
+    pointer-events: auto;
+}
+
+.proxy-table *:hover,
+.request-table *:hover,
+.proxy-table-container *:hover,
+.request-table-container *:hover,
+.table-responsive *:hover {
+    all: unset !important;
+    display: inherit !important;
+    visibility: inherit !important;
+    opacity: inherit !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    color: inherit !important;
+    border: inherit !important;
+    padding: inherit !important;
+    margin: inherit !important;
+    width: inherit !important;
+    height: inherit !important;
+    position: inherit !important;
+    z-index: inherit !important;
+    transform: none !important;
+    box-shadow: none !important;
+    transition: none !important;
+    animation: none !important;
+    scale: none !important;
+    translate: none !important;
+}
+
 /* Disable all hover expansion effects */
+/* Completely disable all table hover effects */
 .text-truncate:hover,
 .url-cell:hover .url-full,
 .key-cell:hover .key-full,
 .ip-cell:hover .ip-full,
 .status-badge.long-text:hover,
 .proxy-table td:hover,
-.request-table td:hover {
-    /* No hover expansion - keep normal state */
+.request-table td:hover,
+.proxy-table tbody tr:hover,
+.request-table tbody tr:hover {
+    /* No hover effects at all */
+    background: transparent !important;
+    transform: none !important;
+    box-shadow: none !important;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     position: static;
     z-index: auto;
-    background: transparent;
     border: none;
     padding: inherit;
     margin: inherit;
-    box-shadow: none;
-    transform: none;
     max-width: inherit;
     min-width: inherit;
 }
@@ -79,7 +126,65 @@
     transform: none !important;
     scale: none !important;
     translate: none !important;
+    box-shadow: none !important;
     transition: background-color 0.2s ease !important;
+}
+
+/* Force disable all table hover effects - ULTIMATE SOLUTION */
+.proxy-table *:hover,
+.request-table *:hover,
+.proxy-table-container *:hover,
+.request-table-container *:hover,
+table *:hover,
+tbody *:hover,
+tr *:hover,
+td *:hover,
+th *:hover {
+    background: transparent !important;
+    background-color: transparent !important;
+    transform: none !important;
+    box-shadow: none !important;
+    transition: none !important;
+    animation: none !important;
+    scale: none !important;
+    translate: none !important;
+    opacity: inherit !important;
+    color: inherit !important;
+    border: inherit !important;
+    padding: inherit !important;
+    margin: inherit !important;
+    width: inherit !important;
+    height: inherit !important;
+    position: inherit !important;
+    z-index: inherit !important;
+}
+
+/* SPECIFIC DISABLE FOR PROXY TABLE CONTAINER */
+.proxy-table-container,
+.proxy-table-container *,
+.proxy-table-container:hover,
+.proxy-table-container *:hover,
+.table-responsive,
+.table-responsive *,
+.table-responsive:hover,
+.table-responsive *:hover {
+    background: transparent !important;
+    background-color: transparent !important;
+    transform: none !important;
+    box-shadow: none !important;
+    transition: none !important;
+    animation: none !important;
+    scale: none !important;
+    translate: none !important;
+    opacity: inherit !important;
+    color: inherit !important;
+    border: inherit !important;
+    padding: inherit !important;
+    margin: inherit !important;
+    width: inherit !important;
+    height: inherit !important;
+    position: inherit !important;
+    z-index: inherit !important;
 }
 
 /* Keep only essential hover effects */

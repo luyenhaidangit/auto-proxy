@@ -72,14 +72,13 @@
 
 .proxy-table tbody tr,
 .request-table tbody tr {
-    transition: all 0.3s ease;
+    /* No transitions to prevent any hover effects */
 }
 
+/* Completely disable table row hover effects */
 .proxy-table tbody tr:hover,
 .request-table tbody tr:hover {
-    background: #404040;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    /* No hover effects at all */
 }
 
 /* Status Badge Enhancements */
@@ -212,7 +211,7 @@
 
 .import-btn:hover {
     background: #218838;
-    transform: translateY(-1px);
+    /* Removed transform to prevent content shifting */
 }
 
 .import-btn i {
@@ -344,7 +343,7 @@
 .btn-icon:hover {
     background: #404040;
     color: #ffffff;
-    transform: scale(1.1);
+    /* Removed transform to prevent content shifting */
 }
 
 .btn-sm {

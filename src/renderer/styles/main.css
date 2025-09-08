@@ -295,14 +295,15 @@ body {
     font-size: 14px;
 }
 
+/* Completely disable table row hover effects */
 .proxy-table tbody tr:hover,
 .request-table tbody tr:hover {
-    background: #404040;
+    /* No hover effects at all */
 }
 
 .proxy-table tbody tr,
 .request-table tbody tr {
-    transition: background 0.3s ease;
+    /* No transitions to prevent any hover effects */
 }
 
 /* Status Badges */
@@ -480,7 +481,7 @@ body {
 
 .chat-support:hover {
     background: #3a8eef;
-    transform: scale(1.1);
+    /* Removed transform to prevent content shifting */
 }
 
 .chat-support i {

@@ -3,25 +3,26 @@
 /* Table row hover - smooth and subtle */
 .proxy-table tbody tr,
 .request-table tbody tr {
-    transition: background-color 0.2s ease;
+    /* No transitions to prevent any hover effects */
     position: relative;
 }
 
+/* Completely disable table row hover effects */
 .proxy-table tbody tr:hover,
 .request-table tbody tr:hover {
-    background: rgba(64, 64, 64, 0.3);
-    cursor: pointer;
+    /* No hover effects at all */
 }
 
 /* Table cell hover - very subtle */
 .proxy-table td,
 .request-table td {
-    transition: background-color 0.15s ease;
+    /* No transitions to prevent any hover effects */
 }
 
+/* Completely disable table cell hover effects */
 .proxy-table td:hover,
 .request-table td:hover {
-    background: rgba(74, 158, 255, 0.1);
+    /* No hover effects at all */
 }
 
 /* Button hover effects - smooth color transitions */
